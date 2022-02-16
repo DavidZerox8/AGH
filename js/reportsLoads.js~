@@ -1,0 +1,39 @@
+$(document).ready(function() { 	
+	 $('.default-date-picker').datepicker();
+
+	$(".get-change-type_report").change(function(){
+		var reportTypeId = $("#report_type option:selected").val();
+   		var reportType = $("#report_type option:selected").text();
+   		
+   		if (reportTypeId == 'S') {
+   			document.getElementById('semana').style.display = 'block';
+   			document.getElementById('mes').style.display = 'none';
+   		}else{
+			document.getElementById('semana').style.display = 'none';
+			document.getElementById('mes').style.display = 'block';
+		};
+		
+	});
+
+	$(".get-change-form").change(function(){
+		document.getElementById("formSearch").submit();
+	});
+
+
+  $("#period").change(function(){
+    	var reportTypeId = $("#period option:selected").val();
+    	
+    	if (reportTypeId == 'Intervalo Personalizado') {
+        $("#searchElement").removeClass('col-md-7').addClass('col-md-4');
+    	  $("#periodElement").removeClass('col-md-4').addClass('col-md-3');
+        $("#initDate").removeClass('hide');
+        $("#finishDate").removeClass('hide');
+    	}else{
+        $("#searchElement").removeClass('col-md-4').addClass('col-md-7');
+        $("#periodElement").removeClass('col-md-3').addClass('col-md-4');
+        $("#initDate").addClass('hide');
+        $("#finishDate").addClass('hide');
+      }
+  });
+	
+});	

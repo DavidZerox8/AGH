@@ -1,0 +1,508 @@
+$(document).ready(function(){ 
+  
+  //Inicializamos encabezados y columnas a la izquierda fijos en tabla
+  /*$("#fixTable").tableHeadFixer({
+    "left" : 12
+  });*/
+
+  $('#checkboxMain').on('change',function(){
+    var checked = $('#checkboxMain').prop("checked")? true : false;
+   
+    if(!checked){
+      $('.checkbox-child').prop("checked",false);
+    }else{
+      $('.checkbox-child').prop("checked",true);
+        
+    }
+
+  });
+
+  $('#FormSearchPrint').on('submit',function(){  
+
+    if($.trim($('#machinesId').val()).length == ''){
+      $('#errorValidateSearch').removeClass('display-none');
+      return false;
+    }
+  
+    return true;
+      
+  });
+
+  //init code validation of checkbox is selected
+  $('#formReseat').on('submit',function(){ 
+    if ($('.checkbox-child').is(':checked')) {
+      var checkboxValues = new Array();
+      $('.checkbox-child:checked').each(function() {
+        checkboxValues.push($(this).val());
+      });
+          
+      $('#manufacturing_order_ids').val(checkboxValues);
+        
+      return true;
+          
+    }else {
+      
+      alert('Favor de seleccionar al menos una order de fabricación');
+      return false;
+    }
+  });
+
+    $('#changemachines').on('onchange',function(){ 
+
+       alert("cambio"); 
+
+
+     });
+
+  $('.confimation-box').change(function(){
+
+
+    var response = confirm("¿Estás seguro de continuar con el cambio solicitado?");
+    
+    if (response) {
+      $(this).closest('form').submit();
+    }else{
+      return false;
+    }
+
+  });
+
+  $(document).on('click', '.editable-cell', function(){
+
+    //Get priority value and input editable element 
+    var editableCell = $(this);
+
+    var dataField = editableCell.attr("data-field");
+
+    var dataId = editableCell.attr("data-id");
+
+    var editableText = $(this).find('.editable-text')
+      .addClass('display-none');
+
+    var originalContent = editableText.text();
+
+    switch(dataField) {
+      case 'priority':
+
+        //create editable-input if not exists 
+        if ( editableCell.find('.editable-input').length == 0 ){
+          $(this).append('<input type="text" value="'+originalContent+'" name="priority['+dataId+']" form="formManufacturingOrders" class="editable-input" style="width:20px;">');
+        }
+        break;
+      case 'setup':
+        
+        //create editable-input if not exists 
+        if ( editableCell.find('.editable-input').length == 0 ){
+          $(this).append('<input type="text" value="'+originalContent+'" name="setup['+dataId+']" form="formManufacturingOrders" class="editable-input" style="width:45px;">');
+        }
+        break;
+      case 'speed':
+        
+        //create editable-input if not exists 
+        if ( editableCell.find('.editable-input').length == 0 ){
+          $(this).append('<input type="text" value="'+originalContent+'" name="speed['+dataId+']" form="formManufacturingOrders" class="editable-input" style="width:20px;">');
+        }
+        break;
+    }
+
+    var editableInput = $(this).find('.editable-input');
+
+    //$(this).html('<input type="text" value="" name = "priority[]" form="formManufacturingOrders" />');
+    editableInput.attr("type", "text")
+      .select();
+
+    editableInput.keypress(function (e) {
+      if (e.which == 13 ) {
+        
+        var newContent = editableInput.val();
+        editableText.text(newContent);
+        editableInput.attr("type", "hidden");
+      }
+
+    });
+
+    editableInput.blur(function(){
+      editableText.removeClass('display-none');
+      var value = editableText.text();
+      editableInput.attr("type", "hidden");
+      editableInput.val(value);
+    });
+    
+  });
+
+  //Función que particiona una orden de fabricación
+  $('#btnPartitionOrder').on('click', function(){
+    
+    //Validamos que al menos un OF esté seleccionada
+    if ($('.checkbox-child').is(':checked')) {
+
+      //Validamos que solo una OF esté seleccionada
+      var checkboxValues = new Array();
+
+      $('.checkbox-child:checked').each(function() {
+        checkboxValues.push($(this).val());
+      });
+      
+      if (checkboxValues.length == 1){
+        //Recuperamos el id, cantidad de of, número de partición, cantidad original de pedido y unidad de medida de la OF seleccionada
+        var productionOrder = checkboxValues[0];
+        var amountOF = $('.checkbox-child:checked').data('amount');
+        var partitionNumber = $('.checkbox-child:checked').data('partition');
+        var amountOrder = $('.checkbox-child:checked').data('amount-order');
+        var amountMeasurementUnit = $('.checkbox-child:checked').data('unit-measure');
+        //Asignamos valores recuperados a las cajas de texto
+        $('#productionOrder').val(productionOrder);
+        $('#partitionNumber').val(partitionNumber);
+        $('#amountOrder').val(amountOrder);
+        $('#originalAmmount').val(amountOF);
+        $('#amountMeasurementUnit').val(amountMeasurementUnit);
+        $('#partitionOrder').modal();
+      
+      }else{
+        alert('Favor de seleccionar sólo la orden de fabricación que particionará');
+        return false;
+      }
+
+    }else {
+      
+      alert('Favor de seleccionar la orden de fabricación que particionará');
+      return false;
+
+    }
+    
+  });
+
+  //Función que abre el formulario modal al solicitar un cambio de máquina
+  $('#btnChangeMachine').on('click', function(){
+    
+    //Validamos que al menos un OF esté seleccionada
+    if (isCheckBoxSelected()) {
+      
+      //Recuperamos los valores de los checkbox seleccionados
+      var checkboxValues = new Array();
+      
+      $('.checkbox-child:checked').each(function() {
+        checkboxValues.push($(this).val());
+      });
+      
+      if (checkboxValues.length == 1){
+        
+        //Recuperamos la OF, y id de ticket
+        var id = checkboxValues[0];
+        var ticketId = $('.checkbox-child:checked').data('ticket');
+
+        //Asignamos valores
+        $('#manufacturingId').val(id);
+        $('#ticket_id').val(ticketId);
+        $('#machineName').val('');
+        $('#machinesChangeId').prop('selectedIndex',0);
+
+        //Abrimos formulario modal
+        $('#changeMachineModal').modal();
+      
+      }else{
+        alert('Favor de seleccionar sólo la orden de fabricación que cambiará de máquina.');
+        return false;
+      }
+
+    }else {
+      
+      alert('Favor de seleccionar la orden de fabricación que desea cambiar de máquina.');
+      return false;
+
+    }
+    
+  });
+
+  //Asigna el nombre de la máquina seleccionada cuando se cambia de máquina una OF
+  $('#machinesChangeId').on('change', function(){
+    //Recuperamos el texto de la máquina seleccionada y lo asignamos al valor en la caja de texto
+    var name = $('#machinesChangeId option:selected').text();
+
+    $('#machineName').val(name.substring(0,3));
+  });
+
+  //Validación de impresión de ordenes de fabricación
+  $('#formPrintProductionOrder').on('submit', function(eventObj){
+    
+    //Validamos que al menos un OF esté seleccionada
+    if ($('.checkbox-child').is(':checked')) {
+
+      //Recuperamos los valores de las of y sus números de partición en arreglos
+      var checkboxValues = new Array();
+      var dataPartition = new Array();
+      
+      $('.checkbox-child:checked').each(function() {
+        checkboxValues.push($(this).val());
+        dataPartition.push($(this).attr('data-partition'));
+      });
+      
+      //Validamos que solo una OF esté seleccionada      
+      if (checkboxValues.length == 1){
+
+          //Agregamos el valor seleccionado al formulario para enviarlo en la petición
+          $(this).append(
+            '<input type="hidden" name="id" value="' + checkboxValues[0] + '">'+
+            '<input type="hidden" name="partition" value="' + dataPartition[0] + '">'
+          );
+      
+      }else{
+        alert('Favor de seleccionar únicamente la orden de fabricación a imprimir');
+        event.preventDefault();
+      }
+
+    }else {
+      
+      alert('Favor de seleccionar la orden de fabricación que imprimirá');
+      event.preventDefault();
+
+    }
+
+  });
+
+  //Validación de impresión de ordenes de fabricación
+  $('#formDeleteOf').on('submit', function(event){
+  
+    //Validamos que al menos un OF esté seleccionada
+    if ($('.checkbox-child').is(':checked')) {
+
+      //Recuperamos los valores de las of y sus números de partición en arreglos
+      var checkboxValues = new Array();
+      var dataPartition = new Array();
+      var dataPriority = new Array();
+      
+      $('.checkbox-child:checked').each(function() {
+        checkboxValues.push($(this).val());
+        dataPartition.push($(this).attr('data-partition'));
+        dataPriority.push($(this).attr('data-priority'));
+      
+      });
+      
+      //Validamos que solo una OF esté seleccionada      
+      if (checkboxValues.length >= 1){
+        for (var i = 0; i < checkboxValues.length ; i++) {
+          if ( dataPriority[i] == 0) {
+          //Agregamos el valor seleccionado al formulario para enviarlo en la petición
+          $(this).append(
+            '<input type="hidden" name="id[]" value="' + checkboxValues[i] + '">'+
+            '<input type="hidden" name="partition[]" value="' + dataPartition[i] + '">'+
+            '<input type="hidden" name="priority[]" value="' + dataPriority[i] + '">'
+          );
+          var response =  confirm("Esta seguro de eliminar las ordenes de fabricaciòn seleccionados!");
+          if (response) {
+            $(this).closest('formCancel').submit();
+          }else{
+           event.preventDefault();
+          }
+         }else{
+            alert('Favor de seleccionar ordenes de fabricaciòn que no esten priorisadas');
+            event.preventDefault();
+         };
+        };
+        
+
+      }else{
+        alert('Favor de seleccionar ordenes de fabricaciòn que no esten priorisadas');
+        event.preventDefault();
+      }
+
+    }else {
+      
+      alert('Favor de seleccionar ordenes de fabricaciòn que no esten priorisadas');
+      event.preventDefault();
+
+    }
+
+  });
+
+  /**
+  *cancela of's
+  */
+  //Validación de impresión de ordenes de fabricación
+  $('#formCancel').on('submit', function(event){
+    
+    //Validamos que al menos un OF esté seleccionada
+    if ($('.checkbox-child').is(':checked')) {
+
+      //Recuperamos los valores de las of y sus números de partición en arreglos
+      var checkboxValues = new Array();
+      var dataOrder = new Array();
+      var dataPriority = new Array();
+      $('.checkbox-child:checked').each(function() {
+        checkboxValues.push($(this).val());
+        dataOrder.push($(this).attr('data-order'));
+        dataPriority.push($(this).attr('data-priority'));
+     });
+      
+      //Validamos que solo una OF esté seleccionada      
+      if (checkboxValues.length >= 1){
+        for (var i = 0; i < checkboxValues.length ; i++) {
+         if ( dataPriority[i] == 0) {
+           //Agregamos el valor seleccionado al formulario para enviarlo en la petición
+          $(this).append(
+            '<input type="hidden" name="covering_id[]" value="' + dataOrder[i] + '">'+
+            '<input type="hidden" name="priority[]" value="' + dataPriority[i] + '">'
+          );
+         var response =  confirm("Esta seguro de cancelar los pedidos seleccionados!");
+          if (response) {
+            $(this).closest('formCancel').submit();
+          }else{
+           event.preventDefault();
+          }
+         }else{
+             alert('Favor de seleccionar ordenes de fabricaciòn que no esten priorisadas');
+             event.preventDefault();
+         }; 
+          
+        };//termina el for
+
+       }else{
+        alert('Favor de seleccionar ordenes de fabricaciòn que no esten priorisadas');
+        event.preventDefault();
+      }
+
+    }else {
+      
+      alert('Favor de seleccionar ordenes de fabricaciòn que no esten priorisadas');
+      event.preventDefault();
+
+    }
+
+  });
+
+  /**
+  * Función que cambiara el estatus a entregado de unas of y los pintara de color con una bandera
+  */
+  $('#formChangePrint').on('submit', function(event){
+    
+    //Validamos que al menos un OF esté seleccionada
+    if (!$('.checkbox-child').is(':checked')) {
+      alert('Favor de seleccionar al menos una  orden de fabricación');
+      return false;
+    }
+
+    //creamos nuestros arreglos que contendran las infr¿ormacion de las ordenes de fabricación
+    var checkboxValues = new Array();
+    var dataOrder = new Array();
+    var dataPriority = new Array();
+    var dataPartition = new Array();
+    var ofSinPrioridad = '';
+
+    //asignamos los valores a los arreglos
+    $('.checkbox-child:checked').each(function() {
+      checkboxValues.push($(this).val());
+      dataOrder.push($(this).attr('data-order'));
+      dataPriority.push($(this).attr('data-priority'));
+      dataPartition.push($(this).attr('data-partition'));
+    });
+
+    //recorremos el arreglo para obtener las doats de la of
+    for (var i = 0; i < checkboxValues.length ; i++){
+      //Validamos si la prioridad de la of es mayor a 0
+      if ( dataPriority[i] > 0){
+        //Agregamos el valor seleccionado al formulario para enviarlo en la petición
+        $(this).append(
+          '<input type="hidden" name="order_id[]" value="' + checkboxValues[i] + '">'+
+          '<input type="hidden" name="priority[]" value="' + dataPriority[i] + '">'+
+          '<input type="hidden" name="partition_number[]" value="' + dataPartition[i] + '">'
+        );
+      }else{
+        //concatenmoas las of que no tiene prioridad
+       
+           ofSinPrioridad =   ofSinPrioridad + " " + dataOrder[i];
+      
+       
+
+      } 
+    }
+ 
+    //validamos si alfuna of no tiene prioridad
+    if (ofSinPrioridad.length == 0){
+      var response =  confirm("¿Esta seguro marcar como entregadas las órdenes de fabricación seleccionadas?");
+        if (response) {
+          $(this).closest('formChangePrint').submit();
+        }else{
+          event.preventDefault();
+        } 
+    }else{
+       alert('Las òrdenes de fabricaciòn ' + ofSinPrioridad + ' no pueden ser marcadas como entregadas ya que no se les han asignado prioridad, favor de verificar');
+        event.preventDefault();
+    };
+
+  });
+  /**
+  *  Función que busca un texto dentro de una tabla con el listado de órdenes de fabricación
+  *
+  */
+  function searchTable(inputVal)
+  {
+    var table = $('#fixTable');
+
+    table.find('tbody tr').each(function(index, row)
+    {
+      var allCells = $(row).find('td');
+      if(allCells.length > 0)
+      {
+        var found = false;
+        allCells.each(function(index, td)
+        {
+          var regExp = new RegExp(inputVal, 'i');
+          if(regExp.test($(td).text()))
+          {
+            found = true;
+            return false;
+          }
+        });
+        if(found == true)$(row).show();else $(row).hide();
+      }
+    });
+  }
+
+  /**
+  * Filtro de búsqueda para la tabla con el listado de órdenes de fabricación
+  */
+  $("#search").on("keyup", function() {
+    searchTable($(this).val());
+  });
+
+  /**
+  * Valida si al menos un checkbox está seleccionado
+  * @returns {booelan} 
+  */
+  function isCheckBoxSelected(){
+
+    if ($('.checkbox-child').is(':checked')) {
+      return true;
+    }else {
+      return false;
+    }
+
+  }
+
+  //********* Validación de formularios *********
+
+  // formChangeMachine
+  $('#formChangeMachine').validate({
+    rules: {
+      machine_id: {
+        required: true,
+      }
+    },
+    highlight: function(element) {
+      $(element).closest('.form-group').addClass('has-error');
+    },
+    unhighlight: function(element) {
+      $(element).closest('.form-group').removeClass('has-error');
+    },
+    errorElement: 'span',
+    errorClass: 'help-block',
+    errorPlacement: function(error, element) {
+      if(element.parent('.input-group').length) {
+        error.insertAfter(element.parent());
+      } else {
+        error.insertAfter(element);
+      }
+    }
+  });
+    
+});

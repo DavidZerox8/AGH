@@ -1,0 +1,54 @@
+$(document).ready(function() { 
+
+  //Init popovers
+  $("[data-toggle=popover]").popover({ 
+    html : true,
+  });
+
+  //get pricing scale of a specific ticket
+  $('.price-by-scales').on('click', function(){
+    
+    //assign the item to present to avoid javascript error
+    var he = $(this);
+    //get ticket id
+    var id = $(this).attr('data-id');
+    
+    $.ajax({
+      type: "post",
+      url: "http://localhost:8888/agh/public/tickets/search/price-scales",
+      data: { 
+        id: id
+      },
+      beforeSend: function() {
+        //insert code
+      }
+    }).done(function(response){
+      //Assign values
+      if (response != 0){
+        var content = '';
+        for(var i=0;i<response.length;i++){
+          content = content + '<div class="text-center border-bottom"><p>$ '+ response[i].price +' - '+ response[i].ammount +'</p></div>';
+        }
+        he.attr('data-content', content);
+        he.popover('show');
+      }else{
+        alert('Ocurrió un error al procesar su solicitud, intente de nuevo por favor.');
+      }
+    }).fail(function(response){
+      alert('No fue posible procesar su solicitud, intente de nuevo por favor');
+    }).always(function() {
+      //insert code
+    });
+
+  });
+
+  //validate search form
+  $('#formSearch').on('submit', function(){
+    if($.trim($('#search').val()).length < 1){
+      $('#search').focus();
+      $('.help-block').removeClass('display-none');
+      return false;
+    }
+  })
+
+});

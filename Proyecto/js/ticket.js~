@@ -1,0 +1,1107 @@
+$(document).ready(function() { 
+    //init search select
+    $(".chosen-select").chosen();
+    //========= General data begin =======
+
+    // Validation form general datas
+    $('#formGeneralData').on('submit',function(){
+        //init has-error form
+        $('#formGeneralData').find('.has-error').removeClass('has-error')
+            .find('.help-block').addClass('display-none');
+        
+        //Stores the items that do not meet validations
+        var elements = [];
+
+        if($.trim($('#name').val()).length < 1){
+            elements.push('#name');
+        }
+        if ( $("#customer_id").val() == ''){
+            elements.push('#customer_id');
+        }
+        if ( $("#types_of_work_id").val() == ''){
+            elements.push('#types_of_work_id');
+        }
+        if ( $("#material_id").val() == ''){
+            elements.push('#material_id');
+        }
+        if ( $("#covering_id").val() == ''){
+            elements.push('#covering_id');
+        }
+        if (!$("input[name='output_type']:checked").is(':checked')){
+            elements.push('#outputTypeContent');
+        }
+        if($.trim($("#axis_measure").val()).length < 1){
+            elements.push('#axis_measure');
+        }
+        if($.trim($("#development_measure").val()).length < 1){
+            elements.push('#development_measure');
+        }
+        if($.trim($("#outside_diameter").val()).length < 1){
+            elements.push('#outside_diameter');
+        }
+        if ( $("#external_diameter_measurement_unit_id").val() == ''){
+            elements.push('#external_diameter_measurement_unit_id');
+        }
+        if ( $("#type_of_packing_id").val() == ''){
+            elements.push('#type_of_packing_id');
+        }
+        if($.trim($("#application_surface").val()).length < 1){
+            elements.push('#application_surface');
+        }
+        if($.trim($("#type_of_labeling").val()).length < 1){
+            elements.push('#type_of_labeling');
+        }
+        //specific validates by type of work begin
+        var typeOfWork = $("#types_of_work_id").val();
+        if ( typeOfWork == 'AA' || typeOfWork == 'TEF' ){
+            if($.trim($("#liner").val()).length < 1){
+                elements.push('#liner');
+            }
+            if($.trim($("#adhesive").val()).length < 1){
+                elements.push('#adhesive');
+            }
+        }
+        if ( typeOfWork == 'TER' || typeOfWork == 'TEF' ){
+            if($.trim($("#flat_width").val()).length < 1){
+                elements.push('#flat_width');
+            }
+        }
+        if($.trim($("#amount_measurement_unit").val()).length < 1){
+            elements.push('#amount_measurement_unit');
+        }
+
+        if($.trim($("#amount_measurement_unit").val()).length < 1){
+            elements.push('#amount_measurement_unit');
+        }
+
+        if($.trim($("input[name='type_of_currency']:checked").val()).length < 1){
+            elements.push("input[name='type_of_currency']");
+        }
+        
+        //specific validates price specification begin
+        var priceSpecification = $("input[name='price_specification']:checked").val()
+        if ( priceSpecification == '1' ){
+            if($.trim($("#base_amount").val()).length < 1){
+                elements.push('#base_amount');
+            }
+            if($.trim($("#base_price").val()).length < 1){
+                elements.push('#base_price');
+            }
+        }
+        
+        //Show the error message to the validated elements
+        if(elements.length){
+            //Add error class and remove display-none class to elements
+            for (var i = 0; i < elements.length; i++) {
+                $(elements[i]).closest('.form-group')
+                    .addClass('has-error')
+                    .find('.help-block')
+                    .removeClass('display-none');
+            } 
+            //set focus to first element
+            $(elements[0]).focus();
+            
+            return false;
+
+        }else{
+            //validate success
+            $('#createTicket').text('Guardando...').prop('disabled', true);
+            return true;
+        }
+
+    });
+    
+    //========= End General data  =======
+
+    //========= Comercial Prepress data =======
+
+    //Shows or hides related fields with the measurement unit machine
+    $('#machines_id').on('change',function(){
+        //get measurement unit and tacks the machin
+        var unitMachine = $(this).find(':selected').attr('data-unit');
+        var tracks = Number($('#machines_id').find(':selected').attr('data-tracks'));
+        var decrease = Number($('#machines_id').find(':selected').attr('data-decrease'));
+            
+        switch(unitMachine) {
+             case 'mm':
+                //Show elements-machines-unit-mm in the DOM
+                $('.elements-machines-unit-mm').removeClass('display-none').addClass('display-block');
+                $('.elements-machines-unit-in').removeClass('display-block').addClass('display-none');
+                break;
+            case 'in':
+                //Show elements-machines-unit-in in the DOM
+                $('.elements-machines-unit-in').removeClass('display-none').addClass('display-block');
+                $('.elements-machines-unit-mm').removeClass('display-block').addClass('display-none');
+                break;
+            default:
+                //Show elements-machines-unit-in in the DOM
+                $('.elements-machines-unit-in').removeClass('display-block').addClass('display-none');
+                $('.elements-machines-unit-mm').removeClass('display-block').addClass('display-none');
+        }
+        //set tracks and measurement unit machine value
+        $('#tracks').val(tracks);
+        $('#decrease').val(decrease);
+        $('#unit_of_measurement_machine').val(unitMachine);
+    });
+
+    // ====== Validation form prepress datas ======
+    $('#formCommercialPrepress').on('submit',function(){
+
+        //init has-error form
+        $(this).find('.has-error').removeClass('has-error')
+            .find('.help-block').addClass('display-none');
+
+        //Stores the items that do not meet validations
+        var elements = [];
+
+        //general validations, add error elements to array
+        if ( $("#machines_id").val() == ''){
+            elements.push('#machines_id');
+        }
+        if($.trim($("#axis_measure_td").val()).length < 1){
+            elements.push('#axis_measure_td');
+        }
+        if($.trim($("#development_measure_td").val()).length < 1){
+            elements.push('#development_measure_td');
+        }
+        if($.trim($("#repetitions_axis").val()).length < 1){
+            elements.push('#repetitions_axis');
+        }
+        if($.trim($("#repetitions_development").val()).length < 1){
+            elements.push('#repetitions_development');
+        }
+        
+        //specific validates by machine_measurement_unit
+        var unitMachine = $('#machines_id').find(':selected').attr('data-unit');
+            
+        if ( unitMachine == 'in' ){
+            if($.trim($("#separations_axis").val()).length < 1){
+                elements.push('#separations_axis');
+            }
+            if($.trim($("#development_separations").val()).length < 1){
+                elements.push('#development_separations');
+            }
+            if($.trim($("#radio").val()).length < 1){
+                elements.push('#radio');
+            }
+            if ( $("#die_cutting").val() == ''){
+                elements.push('#die_cutting');
+            }
+        }
+
+        if ( unitMachine == 'mm' ){
+            if($.trim($("#medianil").val()).length < 1){
+                elements.push('#medianil');
+            }
+            if($.trim($("#development_distortion").val()).length < 1){
+                elements.push('#development_distortion');
+            }
+        }
+
+        //validate sequence color
+        var errorValidate = false;
+        $('[name="ink_sequence[]"]').each(function(idx) {
+            var selectedValue = $(this).val();
+            //if at least one selection cycle we went missing and add element to show alert
+            if(selectedValue == '' && !errorValidate){
+                errorValidate = true;
+                elements.push('#btn-add-sequence');
+            }
+        });
+
+        //Show the error message to the validated elements
+        if(elements.length){
+            //Add error class and remove display-none class to elements
+            for (var i = 0; i < elements.length; i++) {
+                $(elements[i]).closest('.form-group')
+                    .addClass('has-error')
+                    .find('.help-block')
+                    .removeClass('display-none');
+            }
+            //set focus to first element
+            $(elements[0]).focus();
+                
+            return false;
+
+        }else{
+            //validate success
+            $('#btnUpdPrepress').text('Actualizando...').prop('disabled', true);
+            return true;
+        }
+
+    });
+
+    //****** Technical data ********//
+
+    // ====== Validation form datas ======
+    $('#formTechnicalData').on('submit',function(){
+
+        //init has-error form
+        $(this).find('.has-error').removeClass('has-error')
+            .find('.help-block').addClass('display-none');
+
+        //Stores the items that do not meet validations
+        var elements = [];
+
+        //general validations, add error elements to array
+        if ( $("#type_of_cut").val() == ''){
+            elements.push('#type_of_cut');
+        }
+        if ( $("#telescopeo").val() == ''){
+            elements.push('#telescopeo');
+        }
+        if($.trim($("#number_of_joints").val()).length < 1){
+            elements.push('#number_of_joints');
+        }
+        if ( $("#family_roadmap_id").val() == ''){
+            elements.push('#family_roadmap_id');
+        }
+
+        //specific validates by type of work
+        var typeOfWork = $("#types_of_work_id").val();
+        
+        if ( typeOfWork == 'AA' || typeOfWork == 'TEF' ){
+
+            if( $('#divTypeOfDieCuttingId').css('display') == 'block'){
+                
+                if ( $("#type_of_die_cutting_id").val() == ''){
+                    elements.push('#type_of_die_cutting_id');
+                }
+                if($.trim($("#die_cutting_code").val()).length < 1){
+                    elements.push('#die_cutting_code');
+                }
+
+            }
+
+            if($.trim($("#special_finishes").val()).length < 1){
+                elements.push('#special_finishes');
+            }
+        }
+
+        if ( typeOfWork == 'FL' || typeOfWork == 'TER' ){
+            if($.trim($("#width_edges").val()).length < 1){
+                elements.push('#width_edges');
+            }
+            if ( $("#revolt_table").val() == ''){
+                elements.push('#revolt_table');
+            }
+            if ( $("#photocell").val() == ''){
+                elements.push('#photocell');
+            }
+            if ( $("#photocell").val() == '1'){
+                
+                if($.trim($("#photocell_dimension").val()).length < 1){
+                    elements.push('#photocell_dimension');
+                }
+                if($.trim($("#color_photocell").val()).length < 1){
+                    elements.push('#color_photocell');
+                }
+                if ( $("#position_photocell").val() == ''){
+                    elements.push('#position_photocell');
+                }
+                if ( $("#cutting_photocell").val() == ''){
+                    elements.push('#cutting_photocell');
+                }
+
+            }
+            if ( $("#label_edges").val() == ''){
+                elements.push('#label_edges');
+            }
+            if ( $("#label_form").val() == ''){
+                elements.push('#label_form');
+            }
+        }
+
+        if ( typeOfWork == 'FL' ){
+            if($.trim($("#curling").val()).length < 1){
+                elements.push('#curling');
+            }
+        }
+
+        //Show the error message to the validated elements
+        if(elements.length){
+            //Add error class and remove display-none class to elements
+            for (var i = 0; i < elements.length; i++) {
+                $(elements[i]).parent('div')
+                    .addClass('has-error')
+                    .find('.help-block')
+                    .removeClass('display-none')
+                ;
+            } 
+            //set focus to first element
+            $(elements[0]).focus();
+                
+            return false;
+
+        }else{
+            //validate success
+            $('#btnUpdTechnicalData').text('Guardando...').prop('disabled', true);
+            return true;
+        }
+    });
+
+    //Shows or hides related fields with the type of work
+    $('#types_of_work_id').on('change',function(){
+        
+        var types_of_work_id = $(this).val();
+        
+        if ( types_of_work_id == 'FL' || types_of_work_id == 'TER' ){
+            //Hide element in the DOM
+            $('.elements-types-of-work-fl').addClass('display-none').removeClass('display-block');
+        }else{
+            //Show element in the DOM
+            $('.elements-types-of-work-fl').addClass('display-block').removeClass('display-none');
+        }
+        if (types_of_work_id == 'TEF' || types_of_work_id == 'TER' ){
+            //Show element in the DOM
+            $('.elements-types-of-work-tef-ter').addClass('display-block').removeClass('display-none');
+        }else{
+            //Hide element in the DOM
+            $('.elements-types-of-work-tef-ter').addClass('display-none').removeClass('display-block');
+        }
+    });
+
+    // Hide/Show input fields in specification price
+    $('.price-specification').on('change',function(){
+        var priceSpecification = $(this).val();
+        if (priceSpecification == 1){
+            //Show element in the DOM
+            $('.base-price').addClass('display-block').removeClass('display-none');
+            //Hide element in the DOM
+            $('.price-scales').addClass('display-none').removeClass('display-block');
+        }else{
+            //Show element in the of DOM
+            $('.price-scales').addClass('display-block').removeClass('display-none');
+            //Hide element  in the DOM
+            $('.base-price').addClass('display-none').removeClass('display-block');
+        }
+    });
+
+    // Add items to the price scale
+    $('.btn-add-price-scale').on('click',function(){
+        $('#price-scales-content').append(
+            '<div class="form-group price-scales">'+
+                '<div class="row ">'+
+                    '<div class="col-lg-5">'+
+                        '<label>Cantidad:</label>'+
+                        '<input type="text" name="amounts[]" class="form-control input-sm input-amount" >'+
+                    '</div>'+
+                    '<div class="col-lg-5">'+
+                        '<label>Precio:</label>'+
+                        '<div class="input-group">'+
+                            '<span class="input-group-addon">$</span>'+
+                            '<input type="text" name="prices[]" class="form-control input-sm input-money">'+
+                        '</div>'+
+                    '</div>'+
+                    '<div class="col-lg-2 margin-top-30">'+
+                        '<button type="button" class="btn btn-danger btn-xs btn-remove-price-scale">'+
+                            '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Eliminar'+
+                        '</button>'+
+                    '</div>'+
+                '</div>'+
+            '</div>'
+        );
+
+        // Remove items to the price scale
+        $('.btn-remove-price-scale').on('click',function(){
+            $(this).parent().parent().remove();
+        });
+
+    });
+
+
+    //****** End technical data ****//
+
+    // Add elements to DOM for sequence
+    $('.btn-add-sequence').on('click',function(){
+        $('#sequence-content').append(
+            '<div class="row">'+
+                '<div class="form-group col-lg-5">'+
+                    '<label>Tinta:</label>'+
+                    '<select class="form-control input-sm ink_sequence" name="ink_sequence[]">'+
+                        '<option value="" selected>-- Seleccione --</option>'+
+                        '<option value="C">C</option>'+
+                        '<option value="M">M</option>'+
+                        '<option value="Y">Y</option>'+
+                        '<option value="K">K</option>'+
+                        '<option value="PRYMER">PRYMER</option>'+
+                        '<option value="B">B</option>'+
+                        '<option value="BARNIZ MATE">BARNIZ MATE</option>'+
+                        '<option value="BARNIZ BRILLANTE">BARNIZ BRILLANTE</option>'+
+                        '<option value="ADHESIVO">ADHESIVO</option>'+
+                        '<option value="PMS">PMS</option>'+
+                        '<option value="SILICÓN">SILICÓN</option>'+
+                        '<option value="AZUL">AZUL</option>'+
+                        '<option value="ROSA">ROSA</option>'+
+                        '<option value="TAPA POROS">TAPA POROS</option>'+
+                        '<option value="BARNIZ A REG">BARNIZ A REG</option>'+
+                        '<option value="BARNIZ AGUA FDA">BARNIZ AGUA FDA</option>'+
+                        '<option value="BARNIZ AGUA FDA">BARNIZ AGUA FDA</option>'+
+                        '<option value="BARNIZ TACTIL">BARNIZ TACTIL</option>'+
+                        '<option value="CAST & CURE">CAST & CURE</option>'+
+                        '<option value="EXTENDER V">EXTENDER V</option>'+
+                        '<option value="FOIL">FOIL</option>'+
+                        '<option value="GLOW IN THE DARK">GLOW IN THE DARK</option>'+
+                        '<option value="GLOW IN THE DARK">GLOW IN THE DARK</option>'+
+                    '</select>'+
+                '</div>'+
+                '<div class="form-group col-lg-5 name_pms visibility-hidden">'+
+                    '<label for = "name_pms">Nombre de PMS:</label>'+
+                    '<input type="text" class="form-control input-sm" name="name_pms[], maxlength = "125" />'+
+                '</div>'+
+                '<div class="form-group col-lg-2 margin-top-30">'+
+                    '<button type="button" class="btn btn-danger btn-xs btn-remove-sequence">'+
+                        '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Eliminar'+
+                    '</button>'+
+                '</div>'+
+            '</div>'
+        );
+
+        // Remove elements to DOM for sequence
+        $('.btn-remove-sequence').on('click',function(){
+            $(this).parent().parent().remove()
+        });
+
+        // Hide/Show input fields name_pms
+        $('.ink_sequence').on('change', function() {
+            //get value selected
+            var selectedValue = $(this).val();
+            //if value = PMS then display input name_pms
+            if ( selectedValue == 'PMS' ){
+                $(this).parent('div').parent('div').find('.name_pms').removeClass('visibility-hidden');
+            }else{
+                var divParent = $(this).parent('div').parent('div').find('.name_pms').addClass('visibility-hidden');
+            }
+        });
+
+    });
+
+    // Hide/Show input fields name_pms
+    $('.ink_sequence').on('change', function() {
+        //get value selected
+        var selectedValue = $(this).val();
+        //if value = PMS then display input name_pms
+        if ( selectedValue == 'PMS' ){
+            $(this).parent('div').parent('div').find('.name_pms').removeClass('visibility-hidden');
+        }else{
+            var divParent = $(this).parent('div').parent('div').find('.name_pms').addClass('visibility-hidden');
+        }
+    });
+
+    // Hide/Show input fields measure of precut
+    $('#type_of_precut').on('change',function(){
+        var typeOfPrecut = $(this).val();
+        if (typeOfPrecut == 'LINEAL Y TRANSVERSAL'){
+            //Show element in the DOM
+            $('.precut-lineal-transversal').addClass('display-block').removeClass('display-none');
+            //Hide element in the DOM
+            $('.precut-base').addClass('display-none').removeClass('display-block');
+        }else{
+            //Show element  of DOM
+            $('.precut-base').addClass('display-block').removeClass('display-none');
+            //Hide element  of DOM
+            $('.precut-lineal-transversal').addClass('display-none').removeClass('display-block');
+        }
+    });
+
+    // Hide/Show input fields measure of precut
+    $('#photocell').on('change',function(){
+        var photocell = $(this).val();
+        if (photocell == '1'){
+            //Show element in the DOM
+            $('.photocell-inputs').addClass('display-block').removeClass('display-none');
+        }else{
+            //Hide element  of DOM
+            $('.photocell-inputs').addClass('display-none').removeClass('display-block');
+        }
+    });
+
+    // Updating function or eliminate color sequence in the database
+    $('.btn-db-sequence').on('click', function(){
+        //Assign the item to present to avoid javascript error
+        var element = $(this);
+        // Get values
+        var operation = element.data('operation');
+        var id = element.data('id');
+        var url = publicPath+'/color-sequences/'+id;
+        var inkSequenceId = element.parent('div').parent('div').find('[name="_ink_sequence"]').val();
+        var namePms = '';
+        if (inkSequenceId == 'PMS'){
+            var namePms = element.parent('div').parent('div').find('[name="_name_pms"]').val();
+        }
+
+        // Ajax execute operations
+        $.ajax({
+          type: operation,
+          url: url,
+          data: { 
+            id: id,
+            inkSequenceId: inkSequenceId,
+            namePms: namePms
+          },
+          beforeSend: function() {
+            //insert code
+          }
+        }).done(function(response){
+          //Validate response
+          if (response.success){
+            //Validate operation put or delete
+            if (operation == 'put'){
+                alert('El registro ha sido actualizado correctamente');
+            }else{
+                //Delete the elements from the DOM
+                element.parent('div').parent('div').remove();
+                alert('El registro ha sido eliminado correctamente');
+            }
+          }else{
+            alert('Ocurrió un error al actualizar el registro, intente de nuevo por favor.');
+          }
+        }).fail(function(response){
+          alert('No fue posible procesar su solicitud, intente de nuevo por favor');
+        }).always(function() {
+          //insert code
+        });
+    })
+
+
+    // ====== Get number of teeth function  ======
+    $(".get-number-of-teeth").change(function(){
+        var axisMeasure = Number($("#axis_measure_td").val());
+        var developmentMeasure = Number($("#development_measure_td").val());
+        var repetitionsDevelopment = Number($("#repetitions_development").val());
+        var developmentSeparations = Number($("#development_separations").val());
+        var numberOfTeeth = 0;
+        var minimumConversion = 32;
+
+        //Convertirmos a pulgados la medida al eje y al desarrollo recibidas en mm
+        axisMeasure = convertToInches(axisMeasure,"mm");
+        developmentMeasure = convertToInches(developmentMeasure,"mm");
+        
+        //Evitamos el redondeo que hace toFixed en los decimales, multiplicando y diviendo entre 1 + los decimales a limitar en este caso 6 ceros
+        axisMeasure = Math.floor(axisMeasure * 1000000) / 1000000;
+        developmentMeasure = Math.floor(developmentMeasure * 1000000) / 1000000;
+        //Limitamos el número de decimales a seis
+        axisMeasure = axisMeasure.toFixed(6);
+        developmentMeasure = developmentMeasure.toFixed(6);
+        //Extraemos el entero
+        axisMeasureInteger = Math.floor(axisMeasure);
+        developmentMeasureInteger = Math.floor(developmentMeasure);
+        //Restamos el entero obtenido a las medidas al eje y desarrollo
+        axisMeasure = axisMeasure - axisMeasureInteger;
+        developmentMeasure = developmentMeasure - developmentMeasureInteger;
+        //Multiplicamos por la conversión al mínimo
+        axisMeasure = axisMeasure * minimumConversion;
+        developmentMeasure = developmentMeasure * minimumConversion;
+        //Redondeamos el resultado
+        axisMeasure = Math.round(axisMeasure);
+        developmentMeasure = Math.round(developmentMeasure);
+        //Dividimos el resultado sobre la conversión al mínimo
+        axisMeasure = axisMeasure / minimumConversion;
+        developmentMeasure = developmentMeasure / minimumConversion;
+        //Al resultado le sumamos el entero extraido anteriormente
+        axisMeasure = axisMeasure + axisMeasureInteger;
+        developmentMeasure = developmentMeasure + developmentMeasureInteger;
+        //Obtenemos las medidas finales
+        axisMeasureFinal = axisMeasure;
+        developmentMeasureFinal = developmentMeasure;
+        //Mostramos las medidas finales en pulgas en el formulario
+        $("#axis_measure_in_inches").val(axisMeasureFinal);
+        $("#development_measure_in_inches").val(developmentMeasureFinal);
+
+        //Obtenemos las medidas individuales
+        //medidaEjeIndividual = medidaEjeFinal + separacionEje;
+        developmentMeasureIndividual = (developmentMeasureFinal + developmentSeparations) * 8;
+        //Asignamos medidas en pulgadas, no. de dientes, distorsión y ancho de material
+        numberOfTeeth = developmentMeasureIndividual * repetitionsDevelopment;
+        $("#txtMedidaEjePulgadas").val(axisMeasureFinal);
+        $("#txtMedidaDesarrolloPulgadas").val(developmentMeasureFinal);
+        $("#number_of_teeth").val(numberOfTeeth);
+        $("#distortion").val(getDistorsion(numberOfTeeth));
+        getMaterialWidth(axisMeasureFinal);
+        
+    });
+
+    // ====== Cavities Total function  ======
+    $("#repetitions_development, #repetitions_axis").change(function(){
+        var cavitiesTotal = 0;
+        var repetitionsAxis = Number($("#repetitions_axis").val());
+        var repetitionsDevelopment = Number($("#repetitions_development").val());
+        cavitiesTotal = repetitionsAxis * repetitionsDevelopment;
+        $("#cavities_total").val(cavitiesTotal);
+    });
+
+
+    // ====== Calculate the width of the material  ======
+    function getMaterialWidth(axisMeasureFinal){ 
+        // ====== Get input values ======
+        var axisMeasure = 0;
+        var types_of_work_id = $("#types_of_work_id option:selected").val();
+        var repetitionsAxis = Number($("#repetitions_axis").val());
+        //get machine_measurement_unit and tracks from machine selected
+        var unitMachine = $('#machines_id').find(':selected').attr('data-unit');
+        var tracks = Number($("#tracks").val()); 
+        
+        // ====== Si el tipo de trabajo es diferente a Rotograbado  ======
+        //if ( types_of_work_id == 'AA' || types_of_work_id == 'TEF' ){
+        if ( unitMachine == 'in' ){
+            
+            var separationsAxis = Number($("#separations_axis").val());
+            var integer = 0;
+            var decimal = 0;
+            // ====== Multiplicamos la medida al eje resultante x repeticiones al eje  ======
+            var sum1 = axisMeasureFinal * repetitionsAxis;
+            // ====== Restamos uno a las repeticiones al eje y multiplicamos x la separación al eje  ======
+            var sum2 = (repetitionsAxis-1) * separationsAxis;
+            // ====== Obtenemos el ancho de material sumando los dos resultados de las operaciones anteriores  ======
+            var axisMeasure = sum1 + sum2;
+
+            // ====== sumamos las pistas al ancho de material obtenido  ======
+            axisMeasure = axisMeasure + tracks;
+            axisMeasure = axisMeasure * 2.54; 
+
+            // ===== Recuperamos el entero para utilizar más adelante  =====
+            integer = Math.floor(axisMeasure);
+            // ===== Si el ancho de material no es un número entero, redondeamos  =====
+            if (! isInteger(axisMeasure) ){
+                //Extraemos el entero para restárselo al ancho de material
+                decimal = axisMeasure.toString().replace(/^[^\.]+/,'0');
+                //Si el decimal del ancho de material es menor a 0.3, entonces asignamos solo el entero
+                if (decimal < 0.3){
+                    axisMeasure = integer;
+                }
+                //Si el decimal del ancho de material es mayor o igual a 0.3 y menor a 0.7, entonces al entero le sumamos .5
+                if (decimal >= 0.3 && decimal < 0.7){
+                    axisMeasure = integer + .5;
+                }
+                //Si el decimal del ancho de material es mayor o igual a 0.7, entonces al entero le sumamos 1
+                if (decimal >= 0.7){
+                    axisMeasure = integer + 1;
+                }
+            }else{
+                // ===== Si el ancho de material  es entero no redondeamos, sólo le asignamos el entero obtenido =====
+                axisMeasure = integer;
+            }
+            
+            // ===== Set value =====
+            $("#material_width").val(axisMeasure);
+            
+        }else{
+            //unidad de mdida es = mm hacemos estas fórmulas
+            var medianil = Number($("#medianil").val());
+            var axisMeasure = Number($("#axis_measure_td").val());
+            
+            // ===== Repeticiones al eje menos 1 por medialine =====
+            materialWidth = (repetitionsAxis - 1) * medianil;
+            // ===== Al resultado anterior se suma al resultado de la medida al eje por repeteciones al eje + pistas (lo que era ojos electrónicos) =====
+            materialWidth =  materialWidth + ((axisMeasure * repetitionsAxis) + tracks);
+            //Convertir en centímetros
+            materialWidth = materialWidth / 10; 
+            //Set values
+            $("#material_width").val(materialWidth);
+        }
+    }
+
+    $(".getMeasure-development-of-sheet").change(function(){
+
+        //get values
+        var developmentMeasure = Number($.trim($("#development_measure_td").val()));
+        var repetitionsDevelopment = Number($.trim($("#repetitions_development").val()));
+        var developmentDistortion = Number($.trim($("#development_distortion").val()));
+
+        // (Medida al desarrollo de etiqueta * Repeticiones al desarrollo) + Distorsión al desarrollo
+        var measureDevelopmentOfSheet = (developmentMeasure * repetitionsDevelopment) + developmentDistortion;
+        // Set values
+        $('#measure_development_of_sheet').val(measureDevelopmentOfSheet);
+
+    });
+
+    // ====== Función que convierte a pulgadas un valor | Convert to inches Función  ======
+    function convertToInches(value,unitOfMeasurement){
+        var inch = 0;
+        switch (unitOfMeasurement){
+            case 'mm':
+                inch = 25.4;
+            break;
+            case 'cm':
+                inch = 2.54;
+            break;
+        }
+        return  value / inch;
+    }
+
+    // ====== Función que vaida si es el valor es entero  | Validate is integer function ======
+    function isInteger(value){
+        if (value % 1 == 0){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    // ====== Función que calculo los metros por millar | Calculation function meters per thousand ======
+    $(".getMetersPerThousand").change(function(){
+        // Get general values
+        var repetitionsAxis = Number($.trim($("#repetitions_axis").val()));
+        var unitMachine = $('#machines_id').find(':selected').attr('data-unit');
+       // var decrease = $('#machines_id').find(':selected').attr('data-decrease');
+        
+        //Calculamos los metros por millar cuando la unidad de medida de la máquina seleccionada es pulgadas
+        if (unitMachine == 'in' ){
+            // Get specific values
+            var developmentMeasureInInches = Number($.trim($("#development_measure_in_inches").val()));
+            var developmentSeparations = Number($.trim($("#development_separations").val()));
+            
+            // Meters per thousand calculate
+            var metersPerThousand = (((1000 / repetitionsAxis) * (developmentMeasureInInches + developmentSeparations)) * .0254);
+        }
+        else //Si no, calculamos los metros por millar  para unidad de medida de máquina en milímetros
+        {
+            
+            // Get specific values
+            var repetitionsDevelopment = Number($.trim($("#repetitions_development").val()));
+            var developmentMeasure = Number($.trim($("#development_measure_td").val()));
+            var developmentDistortion = Number($.trim($("#development_distortion").val()));
+            
+            // Meters per thousand calculate 
+            var metersPerThousand = (((1000 / (repetitionsAxis * repetitionsDevelopment)) * ((developmentMeasure * repetitionsDevelopment) + developmentDistortion)) / 1000);
+        }
+        
+        // Calculated the percentage of decrease and add to the value obtained
+      /*  percentageDecrease = (metersPerThousand * decrease) / 100;
+        metersPerThousand = metersPerThousand + percentageDecrease;*/
+
+        // return value
+        $("#meters_per_thousand").val(metersPerThousand);
+    });
+
+    // ====== Función que obtiene el valor de la distorsión con base en los dientes especificados 
+    // ====== Function gets the value of the distortion based on the specified teeth 
+    function getDistorsion(dientes){
+        var result;
+        var distorsion = new Array();
+        //Dientes, Distorsión
+        distorsion[55] = ['96.41'];
+        distorsion[56] = ['96.47'];
+        distorsion[57] = ['96.53'];
+        distorsion[58] = ['96.59'];
+        distorsion[59] = ['96.64'];
+        distorsion[60] = ['96.70'];
+        distorsion[61] = ['96.75'];
+        distorsion[62] = ['96.80'];
+        distorsion[63] = ['96.85'];
+        distorsion[64] = ['96.89'];
+        distorsion[65] = ['96.94'];
+        distorsion[66] = ['96.98'];
+        distorsion[67] = ['97.03'];
+        distorsion[68] = ['97.07'];
+        distorsion[69] = ['97.11'];
+        distorsion[70] = ['97.15'];
+        distorsion[71] = ['97.19'];
+        distorsion[72] = ['97.23'];
+        distorsion[73] = ['97.26'];
+        distorsion[74] = ['97.30'];
+        distorsion[75] = ['97.33'];
+        distorsion[76] = ['97.37'];
+        distorsion[77] = ['97.40'];
+        distorsion[78] = ['97.43'];
+        distorsion[79] = ['97.46'];
+        distorsion[80] = ['97.49'];
+        distorsion[81] = ['97.52'];
+        distorsion[82] = ['97.55'];
+        distorsion[83] = ['97.58'];
+        distorsion[84] = ['97.61'];
+        distorsion[85] = ['97.64'];
+        distorsion[86] = ['97.66'];
+        distorsion[87] = ['97.69'];
+        distorsion[88] = ['97.71'];
+        distorsion[89] = ['97.74'];
+        distorsion[90] = ['97.76'];
+        distorsion[91] = ['97.79'];
+        distorsion[92] = ['97.81'];
+        distorsion[93] = ['97.83'];
+        distorsion[94] = ['97.86'];
+        distorsion[95] = ['97.88'];
+        distorsion[96] = ['97.90'];
+        distorsion[97] = ['97.92'];
+        distorsion[98] = ['97.94'];
+        distorsion[99] = ['97.96'];
+        distorsion[100] = ['97.98'];
+        distorsion[101] = ['98.00'];
+        distorsion[102] = ['98.02'];
+        distorsion[103] = ['98.04'];
+        distorsion[104] = ['98.06'];
+        distorsion[105] = ['98.07'];
+        distorsion[106] = ['98.09'];
+        distorsion[107] = ['98.11'];
+        distorsion[108] = ['98.13'];
+        distorsion[109] = ['98.14'];
+        distorsion[110] = ['98.16'];
+        distorsion[111] = ['98.17'];
+        distorsion[112] = ['98.19'];
+        distorsion[113] = ['98.21'];
+        distorsion[114] = ['98.22'];
+        distorsion[115] = ['98.24'];
+        distorsion[116] = ['98.25'];
+        distorsion[117] = ['98.27'];
+        distorsion[118] = ['98.28'];
+        distorsion[119] = ['98.29'];
+        distorsion[120] = ['98.31'];
+        distorsion[121] = ['98.32'];
+        distorsion[122] = ['98.34'];
+        distorsion[123] = ['98.35'];
+        distorsion[124] = ['98.36'];
+        distorsion[125] = ['98.37'];
+        distorsion[126] = ['98.39'];
+        distorsion[127] = ['98.40'];
+        distorsion[128] = ['98.41'];
+        distorsion[129] = ['98.42'];
+        distorsion[130] = ['98.44'];
+        distorsion[131] = ['98.45'];
+        distorsion[132] = ['98.46'];
+        distorsion[133] = ['98.47'];
+        distorsion[134] = ['98.48'];
+        distorsion[135] = ['98.49'];
+        distorsion[136] = ['98.50'];
+        distorsion[137] = ['98.51'];
+        distorsion[138] = ['98.52'];
+        distorsion[139] = ['98.53'];
+        distorsion[140] = ['98.54'];
+        distorsion[141] = ['98.56'];
+        distorsion[142] = ['98.56'];
+        distorsion[143] = ['98.57'];
+        distorsion[144] = ['98.58'];
+        distorsion[145] = ['98.59'];
+        distorsion[146] = ['98.60'];
+        distorsion[147] = ['98.61'];
+        distorsion[148] = ['98.62'];
+        distorsion[149] = ['98.63'];
+        distorsion[150] = ['98.64'];
+        distorsion[151] = ['98.65'];
+        distorsion[152] = ['98.66'];
+        distorsion[153] = ['98.67'];
+        distorsion[154] = ['98.67'];
+        distorsion[155] = ['98.68'];
+        distorsion[156] = ['98.69'];
+        distorsion[157] = ['98.70'];
+        distorsion[158] = ['98.71'];
+        distorsion[159] = ['98.72'];
+        distorsion[160] = ['98.72'];
+        distorsion[161] = ['98.73'];
+        distorsion[162] = ['98.74'];
+        distorsion[163] = ['98.75'];
+        distorsion[164] = ['98.75'];
+        distorsion[163] = ['98.76'];
+        distorsion[166] = ['98.77'];
+        distorsion[167] = ['98.78'];
+        distorsion[168] = ['98.78'];
+        distorsion[169] = ['98.79'];
+        distorsion[170] = ['98.80'];
+        distorsion[171] = ['98.80'];
+        distorsion[172] = ['98.81'];
+        distorsion[173] = ['98.82'];
+        distorsion[174] = ['98.82'];
+        distorsion[175] = ['98.83'];
+        distorsion[176] = ['98.84'];
+        distorsion[177] = ['98.84'];
+        distorsion[178] = ['98.85'];
+        distorsion[179] = ['98.86'];
+        distorsion[180] = ['98.86'];
+        distorsion[181] = ['98.87'];
+        distorsion[182] = ['98.88'];
+        distorsion[183] = ['98.88'];
+        distorsion[184] = ['98.89'];
+        distorsion[185] = ['98.89'];
+        distorsion[186] = ['98.90'];
+        distorsion[187] = ['98.90'];
+        distorsion[188] = ['98.91'];
+        distorsion[189] = ['98.92'];
+        distorsion[190] = ['98.92'];
+        distorsion[191] = ['98.93'];
+        distorsion[192] = ['98.93'];
+        distorsion[193] = ['98.94'];
+        distorsion[194] = ['98.94'];
+        distorsion[195] = ['98.95'];
+        distorsion[196] = ['98.95'];
+        distorsion[197] = ['98.96'];
+        distorsion[198] = ['98.96'];
+        distorsion[199] = ['98.97'];
+        distorsion[200] = ['98.97'];
+        distorsion[201] = ['98.98'];
+        return distorsion[dientes];
+    }
+
+    //******  Packaging and Delivery datas ********//
+    
+    // ====== Validation form datas ======
+    $('#FormPackagingDelivery').on('submit', function(){
+        
+        //init has-error form
+        $(this).find('.has-error').removeClass('has-error')
+            .find('.help-block').addClass('display-none');
+
+        //Stores the items that do not meet validations
+        var elements = [];
+
+        //specific validates by type of work
+        var typeOfWork = $("#types_of_work_id").val();
+        
+        if ( typeOfWork == 'AA' || typeOfWork == 'TEF' ){
+            if($.trim($("#pieces_per_reel").val()).length < 1){
+                elements.push('#pieces_per_reel');
+            }
+            if($.trim($("#coils_per_bag").val()).length < 1){
+                elements.push('#coils_per_bag');
+            }
+        }
+
+        if ( typeOfWork == 'TEF' || typeOfWork == 'TER' ){
+
+            if ( $("#type_of_precut").val() == ''){
+                elements.push('#type_of_precut');
+            }
+
+            if ( $("#type_of_precut").val() == 'LINEAL Y TRANSVERSAL'){
+                
+                if($.trim($("#measure_of_precut_linear").val()).length < 1){
+                    elements.push('#measure_of_precut_linear');
+                }
+                if($.trim($("#measure_of_precut_transversal").val()).length < 1){
+                    elements.push('#measure_of_precut_transversal');
+                }
+
+            }else{
+                if($.trim($("#measure_of_precut").val()).length < 1){
+                    elements.push('#measure_of_precut');
+                }
+            }
+        }
+       
+
+        //Show the error message to the validated elements
+        if(elements.length){
+            //Add error class and remove display-none class to elements
+            for (var i = 0; i < elements.length; i++) {
+                $(elements[i]).closest('.form-group')
+                    .addClass('has-error')
+                    .find('.help-block')
+                    .removeClass('display-none');
+            }
+            //set focus to first element
+            $(elements[0]).focus();
+                
+            return false;
+
+        }else{
+            //validate success
+            $('#btnUpdPackingData').text('Actualizando...').prop('disabled', true);
+            return true;
+        }
+        
+    });
+
+    //validate Upload VoBo form
+    $('#formUploadVoBo').on('submit',function(){
+        
+        var files = $('#vobo').val();
+
+        //valdiate empty files
+        if(!files == '') { 
+          //disabled buttons and show upload info
+          files.disabled = true;
+          $('#alertInfoVoBo').removeClass('display-none');
+          $('#btnCancelVoBo').prop('disabled', true );
+          $('#btnAddVoBo').prop('disabled', true )
+            .text('Guardando VoBo...');
+
+          return true;
+
+        }else{
+          //display user message
+          $('#messageErrorVoBo').removeClass('display-none');
+          return false;      
+        }
+
+    })
+
+    //validate approve VoBo form
+    $('#formApproveVoBo').on('submit',function(){
+        
+        //init has-error form
+        $('#formApproveVoBo').find('.has-error').removeClass('has-error')
+            .find('.help-block').addClass('display-none');
+
+        //get value seleted
+        var voboApproved = $("input[name='vobo_approved']:checked").val();
+        
+        if (voboApproved == 0){
+            if($.trim($("#vobo_observations").val()).length < 1){
+                $('#vobo_observations').closest('.form-group')
+                    .addClass('has-error')
+                    .find('.help-block')
+                    .removeClass('display-none');
+
+                $('#vobo_observations').focus();
+
+                return false;
+            }
+        }
+
+        //validate success
+        $('#btnCancelVoBoApproved').prop('disabled', true);
+        $('#btnConfirmVoBoApproved').text('Actualizando...').prop('disabled', true);
+        return true;
+
+    })
+
+    //validate associate cuip form
+    $('#formAssociateCuip').on('submit',function(){
+        if($.trim($("#cuip").val()).length < 1){
+            alert("Favor de ingresar el CUIP asociado al ticket.");
+            $('#cuip').focus();
+            return false;
+        }
+        return true;
+    })
+
+    //init validation popup of change status
+    $('#formchangeStatus').on('submit',function(){
+        
+        //init has-error form
+        $('#formchangeStatus').find('.has-error').removeClass('has-error')
+            .find('.help-block').addClass('display-none');
+        
+        //Stores the items that do not meet validations
+        var elements = [];
+
+        if ( $("#status option:selected").val() == ''){
+            elements.push('#status');
+        }
+
+        if($.trim($('#observationsChangeStatus').val()).length < 1){
+            elements.push('#observationsChangeStatus');
+        }
+
+        //Show the error message to the validated elements
+        if(elements.length){
+            //Add error class and remove display-none class to elements
+            for (var i = 0; i < elements.length; i++) {
+                $(elements[i]).closest('.form-group')
+                    .addClass('has-error')
+                    .find('.help-block')
+                    .removeClass('display-none');
+            } 
+            //set focus to first element
+            $(elements[0]).focus();
+            
+            return false;
+
+        }else{
+            //validate success
+            $(":submit").text('Guardando...').prop('disabled', true);
+            return true;
+        }
+
+    });   
+    
+});

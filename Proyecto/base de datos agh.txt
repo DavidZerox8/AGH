@@ -1,0 +1,113 @@
+drop database agh;
+create database agh;
+
+use agh;
+
+create table departamento
+(id_depto int not null,
+nombre varchar(50) not null,
+primary key (id_depto));
+
+create table empleado
+(id_emp int not null,
+id_depto int not null,
+apellidoP varchar(50) not null,
+apellidoM varchar(50),
+nombre varchar(50) not null,
+genero varchar (2),
+fechaNac date not null,
+gradoEstud varchar(50) not null,
+telefono varchar(20),
+celular varchar(25),
+pais varchar(50) not null,
+estado varchar(50) not null,
+municipio varchar(50) not null,
+colonia varchar(50) not null,
+calle varchar(50) not null,
+primary key (id_emp),
+foreign key (id_depto) references departamento (id_depto));
+
+create table maquina
+(id_maq int not null,
+nombre varchar(50) not null,
+micraje int not null,
+tipo varchar(50) not null,
+primary key (id_maq));
+
+create table etiqueta
+(id_etiq int not null,
+id_maq int not null,
+nombre varchar(50) not null,
+marca varchar(50) not null,
+version varchar(10) not null,
+ancho varchar(10) not null,
+alto varchar(10) not null,
+acabado varchar(50)not null,
+presentacion varchar(30) not null,
+primary key (id_etiq),
+foreign key (id_maq) references maquina (id_maq));
+
+create table cliente 
+(id_cliente int not null,
+empresa varchar(50) not null,
+razonSocial varchar(50) not null,
+rfc varchar(20) null,
+domicilio varchar(70) not null,
+telefono varchar(20) not null,
+email varchar(50) not null,
+status varchar(20) not null,
+PRIMARY KEY(id_cliente));
+
+
+create table proveedor
+(id_proveedor int  not null,
+organizacion varchar(50) not null,
+direccion varchar(70) not null,
+telefono varchar(25) not null,
+email varchar(50) not null,
+PRIMARY KEY (id_proveedor));
+
+create table pedido
+(id_pedido int not null,
+id_cliente int not null,
+id_proveedor int not null,
+nombreMaterial varchar(50) not null,
+unidadMedida varchar(30),
+cantidad varchar(50) not null,
+fechaEntrega date not null,
+horaEntrega time not null,
+fechaSolicitud date not null,
+horaSolicitud time not null,
+presentacion varchar(30),
+empresa varchar(50),
+primary key (id_pedido),
+foreign key (id_cliente) references cliente (id_cliente),
+foreign key (id_proveedor) references proveedor (id_proveedor));
+
+create table material
+(id_material int not null,
+id_pedido int not null,
+cantidad varchar(30) not null,
+descripcion varchar(50),
+presentacion varchar(30) not null,
+unidadMedida varchar(30) not null,
+primary key (id_material),
+foreign key (id_pedido) references pedido (id_pedido));
+
+
+
+create table transporte 
+(id_transporte int not null,
+id_emp int not null,
+id_etiq int not null,
+marca varchar(20) not null,
+modelo int not null,
+numSerie varchar(20) not null,
+placas varchar(10) not null,
+diasCircula varchar(30) not null,
+mesVerificacion varchar(30) not null,
+mesTenencia varchar(15) not null,
+PRIMARY KEY(id_transporte),
+foreign key (id_emp) references empleado (id_emp),
+foreign key (id_etiq) references etiqueta (id_etiq));
+

@@ -1,0 +1,78 @@
+INSERT INTO empleado
+VALUES ('10','Ventas','Rojas','Martinez','Raul','masculino','1970-05-22','licenciatura','55163256','Atizapan lomas no.125');
+INSERT INTO empleado
+VALUES ('20','EncargadoVentas','Rivas','Palacios','susana','femenino','1980-07-05','licenciatura','165236985','Tlalnepantla toltecas no 856');
+INSERT INTO empleado
+VALUES ('30','EncargadoMateriales','Lopez','Sanchez','Manuel','masculino','1980-004-09','licenciatura','55862145','Naucalpan de juarez');
+
+
+
+INSERT INTO maquina
+VALUES('1','HEIDELBERG OFFSET','0.3','rotograbado');
+INSERT INTO maquina
+VALUES('2','DCM-BIVA','0.04','flexible');
+INSERT INTO maquina
+VALUES('3','HP INDIGO','0.2','stickers');
+INSERT INTO maquina
+VALUES('4','NILPETER FB-3300','0.01','adherible');
+
+
+
+INSERT INTO etiqueta
+VALUES('1','2','boop','Coca-cola','7cm','15cm','flexible','navideña','temporada navideña oso','Plastico','alta definicion','Coca-cola');
+INSERT INTO etiqueta
+VALUES('2','1','epurita','epura','4cm','10cm','flexible','era de hielo','agosto','Plastico','transparente','epura');
+INSERT INTO etiqueta
+VALUES('3','4','boop','aceite','6cm','8cm','adherible','comida','etiqueta aceite','papel','alta definicion','sabrosano');
+
+
+
+INSERT INTO cliente
+VALUES('21','pepsico','c.v','tyh254fg85','D.F cuatemoc 586','55489632','52pepsico@gpepsico.com','activo');
+INSERT INTO cliente
+VALUES('22','norma','cadcv','prf5632148','guadalajara 96','23695845','emnorma@norma.com','activo');
+INSERT INTO cliente
+VALUES('23','jarritos','c.v','mgh56595546','D.F dlegacion benito juarez','55214524','lkjfd547@jarritos.com','activo');
+
+
+INSERT INTO proveedor
+VALUES('100','cristafilm','d.f delegacion cuautemoc','55212365','proveedormateria@cistafil.com');
+INSERT INTO proveedor
+VALUES('101','platic','queretaro 123 av.principal','245635896','plasticma@gmail.com');
+
+
+INSERT INTO material
+VALUES('10','1millar','papel para stickers','rollo','millares');
+INSERT INTO material
+VALUES('11','1litro','tinta magenta','liquida','litros');
+INSERT INTO material
+VALUES('12','3rollos','rollo de planstico para etiqueta','rollo','kilos');
+
+
+INSERT INTO pedidoProveedor
+VALUES('200','100','10','2millares','2016-04-12','04:30','2016-03-20','12:20');
+INSERT INTO pedidoProveedor
+VALUES('201','101','11','2litros','2016-03-11','09:30','2016-03-02','11:10');
+
+INSERT INTO pedidoCliente
+VALUES('300','21','1','500piezas','2016-12-01','07:30','2016-11-20','11:00');
+INSERT INTO pedidoCliente
+VALUES('301','22','2','1000piezas','2016-05-09','12:15','2016-04-20','12:17');
+
+
+INSERT INTO transporte
+VALUES('500','10','ford','2009','m253','lm521','martes','enero','marzo');
+INSERT INTO transporte
+VALUES('501','20','wolsvaguent','2008','k564','mk542','miercoles','marzo','noviembre');
+INSERT INTO transporte
+VALUES('502','30','nissan','2007','u254','fg126','jueves','agosto','diciembre');
+
+
+INSERT INTO usuarios
+VALUES('guadalupeaguilar','123aguilar');
+INSERT INTO usuarios
+VALUES('lopezmateo','236mateo');
+INSERT INTO usuarios
+VALUES('santoslourdes','158santos');
+
+

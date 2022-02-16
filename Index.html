@@ -1,0 +1,138 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+<script type="text/javascript">
+history.forward();
+</script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="img/favicon.png">
+
+  <title>.: AGH ONLINE :.</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="css/bootstrap-reset.css" />
+  <link rel="stylesheet" type="text/css" href="css/main.css" />
+  <link rel="stylesheet" type="text/css" href="css/multiple-select.css" />
+  <link rel="stylesheet" type="text/css" href="css/jquery.editable-select.min.css" />
+  <link rel="stylesheet" type="text/css" href="css/datepicker.css" />
+  <link rel="stylesheet" type="text/css" href="css/chosen.min.css" />
+  <link rel="stylesheet" type="text/css" href="css/micss.css">
+  <!--JavaScript-->
+  <script src="js/jquery.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/jquery.dcjqaccordion.2.7.js"></script>
+  <script src="js/jquery.scrollTo.min.js"></script>
+  <script src="js/chosen.jquery.min.js"></script>
+  <script src="js/chosen.proto.min.js"></script>
+  <script src="js/common-scripts.js"></script>
+
+
+
+  
+  <!-- HTML5 shim and Respond.js IE8 support of HTML5 tooltips and media queries -->
+  <!--[if lt IE 9]>
+    {{ HTML::script('js/html5shiv.js') }}
+    {{ HTML::script('js/respond.min.js') }}
+  <![endif]-->
+  <script>
+    var publicPath = '{{ URL::to('/') }}';
+  </script>
+  </head>
+
+  <body>
+    <section id="container">
+      <!--header start-->
+      <header class="header white-bg">
+        <div class="sidebar-toggle-box">
+        
+        </div>
+        <!--logo start-->
+      <a href="" class="logo"><img src = "Imagenes\loggo.jpg " valign="top">AGH OnLine</a>
+        <!--logo end-->
+        <div class="top-nav ">
+          <ul class="nav pull-right top-menu">
+            <!-- user login dropdown start-->
+            <li class="dropdown">
+              <br>
+               <a href="agh.html">INICIA SESION    <img src="Imagenes/avatar1_small.png"> </a>
+		          
+
+            <!-- user login dropdown end -->
+          </ul>
+        </div>
+      </header>
+      <!--header end-->
+      <!--sidebar start-->
+      <aside>
+        <div id="sidebar"  class="nav-collapse ">
+          <!-- sidebar menu start-->
+          <ul class="sidebar-menu" id="nav-accordion">
+            <li class="sub-menu">
+			<br><br><br><br><br><br>
+			<br><br><br>
+			<main>
+  <input type="radio" id="mostrar-modal" name="modal"/>
+  <label for="mostrar-modal">QUIENES SOMOS</label>
+  <input type="radio" id="cerrar-modal" name="modal"/>
+  <label for="cerrar-modal">X</label>
+  <div id="modal">
+    <p> 
+	AGH labels, empresa dedicada a imprimir etiquetas, en cualquier proceso de impresión <br>
+	(offset, rotograbado, flexografia y digital), y servicios digitales añadidos.
+	</p>
+	</div>
+
+			<br><br><br>
+			
+  <input type="radio" id="mostrar-modal2" name="modal2"/>
+  <label for="mostrar-modal2">CATALOGO</label>
+  <input type="radio" id="cerrar-modal2" name="modal2"/>
+  <label for="cerrar-modal2">X</label>
+  <div id="modal2">
+  <p>
+  modsjioxjioxjosxij
+  </p>
+	</div>
+	
+				<br><br><br>
+  <input type="radio" id="mostrar-modal3" name="modal3"/>
+  <label for="mostrar-modal3">VISITANOS</label>
+  <input type="radio" id="cerrar-modal3" name="modal3"/>
+  <label for="cerrar-modal3">X</label>
+  <div id="modal3">
+  <p>
+  	<img src = "Imagenes/logo.png"/>
+  </p>
+	</div>
+</main>
+				
+          <!-- sidebar menu end-->
+        </div>
+      </aside>
+      <!--sidebar end-->
+      <!--main content start-->
+      <section id="main-content">
+        <!-- Aquí se inserta el contenido -->
+
+        @yield('content')
+
+        <center><video width="100%" height="100%" controls autoplay>
+  <source src="Video/AGH.mp4" type="video/mp4"></center>
+<center>
+  <bgcolor="red">
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Licencia Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png" /></a><br />Esta obra está bajo una <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Licencia Creative Commons Atribución-NoComercial-SinDerivar 4.0 Internacional</a>.
+<br>
+        @Copyrights <br>
+        Benítez Corona Angélica Ebianeth <br>
+        Martínez López David <br>
+        Morán Garrido Maria Guadalupe <br>
+
+
+
+      </section>
+      <!-- /main content end-->
+    </section>
+  </body>
+</html>

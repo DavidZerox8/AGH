@@ -1,0 +1,441 @@
+$(document).ready(function() { 
+
+  //Datapicker init
+  $('.default-date-picker').datepicker();
+
+  // Validación del formulario formAddPrintLoad
+  $('#formAddPrintLoad').validate({
+    rules: {
+      product_name: {
+        required: true,
+      },
+      laminate_online: {
+        required: true,
+      },
+      printing_date: {
+        required: true,
+      },
+      operator_id: {
+        required: true,
+      },
+      user_id: {
+        required: true,
+      },
+      kilograms: {
+        required: true,
+        number: true
+      },
+      linear_meters: {
+        required: true,
+        number: true
+      },
+      true_width: {
+        required: true,
+        number: true
+      },
+      decrease: {
+        required: true,
+        number: true
+      }
+    },
+    highlight: function(element) {
+      $(element).closest('.form-group').addClass('has-error');
+    },
+    unhighlight: function(element) {
+      $(element).closest('.form-group').removeClass('has-error');
+    },
+    errorElement: 'span',
+    errorClass: 'help-block',
+    errorPlacement: function(error, element) {
+      if(element.parent('.input-group').length) {
+        error.insertAfter(element.parent());
+      } else {
+        error.insertAfter(element);
+      }
+    }
+  });
+
+  // Validación del formulario formSavePrintLoad
+  $('#formSavePrintLoad').on('submit',function(event){
+    var printingDate = [];
+
+    $("input[name='printing_date[]']").each(function() {
+        var value = $(this).val();
+        if (value) {
+            printingDate.push(value);
+        }
+    });
+
+    if (printingDate.length === 0) {
+      event.preventDefault();
+    }
+  });
+
+  //Función que agregar un registros a la tabla carga de impresión
+  $(document).on('submit', '#formAddPrintLoad', function(event){ // Use $(document) to controllers events based on delegation
+    
+    //Recuperamos el tipo de acción del formulario el cual puede tener las siguientes opciones
+    //ADD = Agregar un registro a la tabla HTML para posteriormente guardarlo
+    //PUT = Actualiza un registro existente en la base de datos
+    //UPDATE = Actualiza un registro diréctamente en el HTML sin modificarlo en la base de datos
+    var action = $("#methodFormAdd").val();
+
+    //Validamos si el tipo de acción no es una actualización de un registro existente a la base de datos
+    if (action != "PUT"){
+
+      //Recuperamos los valores que se agregarán del formulario
+      var id = $('#id').val();
+      var printingDate = $('#printingDate').val();
+      var laminate_onlineId = $("#laminate_online option:selected").val();
+      var laminate_online = $("#laminate_online option:selected").text();
+      var operatoriD = $("#operatorId option:selected").val();
+      var operator = $("#operatorId option:selected").text();
+      var userId = $("#userId option:selected").val();
+      var user = $("#userId option:selected").text();
+      var kilograms = $.trim($('#kilograms').val());
+      var linearMeters = $.trim($('#linearMeters').val());
+      var trueWidth = $.trim($('#trueWidth').val());
+      var decrease = $.trim($('#decrease').val());    
+      var partition = $.trim($('#partition_numbre').val());    
+      var measuring_united_printer = $.trim($('#measuring_united_printer').val());    
+      var of = $.trim($('#of').val());
+
+
+      
+      //Índice de registro de tabla html que aplica si se actualiza el registro a nivel vista
+      var index = $("[name='_index']").val();
+
+      if (measuring_united_printer == 'KG') {
+      var row = '<tr class="child">' +
+                  '<td class="text-center">' +
+                    '<input type="text" name = "of[]" value = "' + of + '" class = "hidden" >' +
+                    '<span class="text-hidden">' + of + '</span>' +
+                  '</td>'+
+                  '<td class="text-center">' +
+                    '<input type="hidden" name = "id[]" value = "' + id + '" form = "formSavePrintLoad" >' +
+                    '<input type="text" name = "printing_date[]" value = "' + printingDate + '" class = "hidden" form = "formSavePrintLoad" >' +
+                    '<span class="text-hidden">' + printingDate + '</span>' +
+                  '</td>' +
+                  '<td class="text-center">' +
+                    '<input type="text" name = "partition_numbre[]" value = "' + partition + '" class = "hidden operator-id" form = "formSavePrintLoad" >' +
+                    '<span class="text-hidden">' + partition + '</span>' +
+                  '</td>' +
+                  '<td class="text-center">' +
+                    '<input type="text" name = "user_id[]" value = "' + userId + '" class = "hidden user-id" form = "formSavePrintLoad" >' +
+                    '<span class="text-hidden">' + user + '</span>' +
+                  '</td>' +
+                  '<td class="text-center">' +
+                    '<input type="text" name = "operator_id[]" value = "' + operatoriD + '" class = "hidden operator-id" form = "formSavePrintLoad" >' +
+                    '<span class="text-hidden">' + operator + '</span>' +
+                  '</td>'+
+                  '<td class="text-center">' +
+                     '<input type="text" name = "kilograms[]" value = "' + kilograms + '" class = "hidden" form = "formSavePrintLoad" >' +
+                     '<span class="text-hidden">' + kilograms + '</span>' +
+                    '</td>'+
+                  '<td class="text-center">' +
+                    '<input type="text" name = "linear_meters[]" value = "' + linearMeters + '" class = "hidden" form = "formSavePrintLoad" >' +
+                    '<span class="text-hidden">' + linearMeters + '</span>' +
+                  '</td>' +
+                  '<td class="text-center">' +
+                    '<input type="text" name = "true_width[]" value = "' + trueWidth + '" class = "hidden" form = "formSavePrintLoad" >' +
+                    '<span class="text-hidden">' + trueWidth + '</span>' +
+                  '</td>' +
+                  '<td class="text-center">' +
+                    '<input type="text" name = "decrease[]" value = "' + decrease + '" class = "hidden" form = "formSavePrintLoad" >' +
+                    '<span class="text-hidden">' + decrease + '</span>' +
+                  '</td>' +
+                  '<td class="text-center">' +
+                    '<input type="text" name = "laminate_online[]" value = "' + laminate_onlineId + '" class = "hidden operator-id" form = "formSavePrintLoad" >' +
+                    '<span class="text-hidden">' + laminate_online + '</span>' +
+                  '</td>' +
+                  '<td class="text-center">' +
+                    '<button class="btn btn-info btn-xs edit-table-row action-button" type="button" data-action="UPDATE"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>' +
+                  '</td>' +
+                  '<td class="text-center">' +
+                    '<button class="btn btn-danger btn-xs delete-table-row action-button" type="button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>' +
+                  '</td>' +
+                '</tr>';
+              }else{
+                 var row = '<tr class="child">' +
+                  '<td class="text-center">' +
+                    '<input type="text" name = "of[]" value = "' + of + '" class = "hidden" >' +
+                    '<span class="text-hidden">' + of + '</span>' +
+                  '</td>'+
+                  '<td class="text-center">' +
+                    '<input type="hidden" name = "id[]" value = "' + id + '" form = "formSavePrintLoad" >' +
+                    '<input type="text" name = "printing_date[]" value = "' + printingDate + '" class = "hidden" form = "formSavePrintLoad" >' +
+                    '<span class="text-hidden">' + printingDate + '</span>' +
+                  '</td>' +
+                  '<td class="text-center">' +
+                    '<input type="text" name = "partition_numbre[]" value = "' + partition + '" class = "hidden operator-id" form = "formSavePrintLoad" >' +
+                    '<span class="text-hidden">' + partition + '</span>' +
+                  '</td>' +
+                  '<td class="text-center">' +
+                    '<input type="text" name = "user_id[]" value = "' + userId + '" class = "hidden user-id" form = "formSavePrintLoad" >' +
+                    '<span class="text-hidden">' + user + '</span>' +
+                  '</td>' +
+                  '<td class="text-center">' +
+                    '<input type="text" name = "operator_id[]" value = "' + operatoriD + '" class = "hidden operator-id" form = "formSavePrintLoad" >' +
+                    '<span class="text-hidden">' + operator + '</span>' +
+                  '</td>'+
+                  '<td class="text-center">' +
+                    '<input type="text" name = "linear_meters[]" value = "' + linearMeters + '" class = "hidden" form = "formSavePrintLoad" >' +
+                    '<span class="text-hidden">' + linearMeters + '</span>' +
+                  '</td>' +
+                  '<td class="text-center">' +
+                    '<input type="text" name = "true_width[]" value = "' + trueWidth + '" class = "hidden" form = "formSavePrintLoad" >' +
+                    '<span class="text-hidden">' + trueWidth + '</span>' +
+                  '</td>' +
+                  '<td class="text-center">' +
+                    '<input type="text" name = "decrease[]" value = "' + decrease + '" class = "hidden" form = "formSavePrintLoad" >' +
+                    '<span class="text-hidden">' + decrease + '</span>' +
+                  '</td>' +
+                  '<td class="text-center">' +
+                    '<input type="text" name = "laminate_online[]" value = "' + laminate_onlineId + '" class = "hidden operator-id" form = "formSavePrintLoad" >' +
+                    '<span class="text-hidden">' + laminate_online + '</span>' +
+                  '</td>' +
+                  '<td class="text-center">' +
+                    '<button class="btn btn-info btn-xs edit-table-row action-button" type="button" data-action="UPDATE"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>' +
+                  '</td>' +
+                  '<td class="text-center">' +
+                    '<button class="btn btn-danger btn-xs delete-table-row action-button" type="button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>' +
+                  '</td>' +
+                '</tr>';
+              };
+
+      //Si el valor de la acción es ADD entonces agregamos el registro, si no lo actualizamos
+      if (action == "ADD"){
+
+        //Insertamos la información como un registro de la tabla
+        $('#tablePrintLoad tbody').append(row);
+
+      }else{
+
+        //Actualizamos la información del registro seleccionado
+        $('#tablePrintLoad tbody tr').eq(index).replaceWith(row);
+
+      }
+     
+      //Reseteamos form
+      resetFormAdd();
+      //recalculamos las sumatorias
+      calculatingTotals(kilograms,linearMeters);
+      //Invocamos a la función que consulta si se muestra el formulario formSave
+      showFormSave();
+      //Cancelamos el enlace del submit
+      event.preventDefault();
+
+    }else{
+      
+      //Cambiamos el valor del campo  "_method" para que el formulario realice una petición PUT y actualice un registro en la base de datos
+      $("#methodFormAdd").val('PUT');
+
+    }
+
+  });
+
+  // ====== Calcula los metros lineales cuando la medida de impresión de la máquina es en KG  ======
+  $(".get-linear-meters").change(function(){
+   
+    //Recuperamos los valores que necesitamos para realizar el cálculo
+    var kilograms = Number($.trim($('#kilograms').val()));
+    var metersPerThousand = Number($.trim($('#metersPerThousand').val()));
+    var kilogramPerThousand = Number($.trim($('#kilogramPerThousand').val()));
+    var decreaseMachine = Number($.trim($('#decreaseMachine').val()));
+    var kg_on_square_meter = Number($.trim($('#kg_on_square_meter').val()));
+    var kg_coverings = Number($.trim($('#kg_coverings').val()));
+    var laminate_online = Number($.trim($('#laminate_online').val()));
+    var material_width = Number($.trim($('#trueWidth').val()));
+    /*var decrease = Number($.trim($('#decreaseMachine').val()));
+    var machines_id = Number($.trim($('#machines_id').val()));*/
+   
+    //Calculamos los metros lineales
+    if (laminate_online    == 1) {
+      //Calculamos los metros lineales
+      var linearMeters = (((kilograms  ) / (kg_on_square_meter + kg_coverings)) / (material_width / 100)).toFixed(); 
+      
+    }else{
+     
+       
+      var linearMeters = ((kilograms  /  kg_on_square_meter) / (material_width / 100)).toFixed();
+    };
+    
+    //Asignamos los metros lineales
+    if (!isNaN(linearMeters) || !linearMeters == Number.POSITIVE_INFINITY || !linearMeters == Number.NEGATIVE_INFINITY){
+      $("#linearMeters").val(linearMeters).change();
+    }else{
+      $("#linearMeters").val('');
+    }
+
+
+  });
+ 
+  // ====== Calcula la merma ======
+  $(".get-decrease").change(function(){
+    
+    //Recuperamos los valores que necesitamos para realizar el cálculo
+    var trueWidth = Number($.trim($('#trueWidth').val()));
+    var linearMeters = Number($.trim($('#linearMeters').val()));
+    var material_width = Number($.trim($('#material_width').val()));
+    var value = 3;
+    var width = material_width / trueWidth;
+
+  });
+
+  // ====== Función que calcula la sumatoria de kilogramos y metros lineales ======
+  function calculatingTotals(kilograms,linearMeters){
+
+    var totalKilograms = $.trim($('#total_kilogram').text());
+    var totalLinearMaters = $.trim($('#total_laminate_online').text());
+
+    totalKilograms= totalKilograms.split(',').join('');
+    totalLinearMaters= totalLinearMaters.split(',').join('');
+    totalKilograms= Number(totalKilograms);
+    totalLinearMaters= Number(totalLinearMaters);
+   
+    totalKilograms = parseFloat(totalKilograms) + parseFloat(kilograms);
+    totalLinearMaters = parseFloat(totalLinearMaters) + parseFloat(linearMeters);
+    
+    $("#total_kilogram").text(totalKilograms);
+    $("#total_laminate_online").text(totalLinearMaters); 
+  }
+
+  function calculatingTotalsRestar(kilograms,linearMeters){
+      var totalKilograms = Number($.trim($('#total_kilogram').text())).toFixed();
+      var totalLinearMaters = Number($.trim($('#total_laminate_online').text())).toFixed();
+   
+      totalKilograms = totalKilograms - kilograms;
+      totalLinearMaters = totalLinearMaters - linearMeters;
+
+      $("#total_kilogram").text(totalKilograms);
+      $("#total_laminate_online").text(totalLinearMaters);
+
+  } 
+
+   $(".get-change-laminate").change(function(){
+      //Recalculamos los metros lineales.
+      $(".get-linear-meters").change();
+   });
+
+   //Función que elimina un registro de una tabla html
+  $(document).on('click', '.delete-table-row', function(){
+      
+      //Recuperamos los kilogramos y metros lineales del registro a eliminar
+      var kilograms =  $(this).closest('tr').find('td:eq(5)').find('input').val();
+      var linearMeters =  $(this).closest('tr').find('td:eq(6)').find('input').val();
+      
+      //Eliminar el registro de la tabla
+      this.closest('tr').remove();
+      
+      //Restamos los totales de kilogramos y metros lineales
+      calculatingTotalsRestar(kilograms,linearMeters);
+      
+      //Invocamos a la función que consulta si se muestra el formulario formSave
+      showFormSave();
+  });
+
+  //Función que recupera el registro que se editará y asigna a las cajas de texto
+  $(document).on('click', '.edit-table-row', function(){
+        
+    //Validamos el tipo de modificación del registro
+    var action = $(this).attr('data-action');
+    
+    //Recuperamos los datos del registro a editar
+    var of = $(this).closest('tr').find('td:eq(0)').find('input').val();
+    var printingDate =  $(this).closest('tr').find('td:eq(1)').find('input').val();
+    var partitionNumber =  $(this).closest('tr').find('td:eq(2)').find('input').val();
+    var supervisorId =  $(this).closest('tr').find('td:eq(3)').find('input').val();
+    var operatorId =  $(this).closest('tr').find('td:eq(4)').find('input').val();
+    var kilograms =  $(this).closest('tr').find('td:eq(5)').find('input').val();
+    var linearMeters =  $(this).closest('tr').find('td:eq(6)').find('input').val();
+    var trueWidth =  $(this).closest('tr').find('td:eq(7)').find('input').val();
+    var decrease =  $(this).closest('tr').find('td:eq(8)').find('input').val();
+    var laminateOnLine =  $(this).closest('tr').find('td:eq(9)').find('input').val();
+    var indexRow = $(this).closest('tr').index();
+
+    //Asignamos valores recuperados a los datos del formulario para su edición
+    $("[name='printing_date']").val(printingDate);
+    $("[name='partition_numbre']").val(partitionNumber);
+    $("[name='laminate_online']").val(laminateOnLine);
+    $("[name='user_id']").val(supervisorId);
+    $("[name='operator_id']").val(operatorId);
+    $("[name='kilograms']").val(kilograms);
+    $("[name='true_width']").val(trueWidth);
+    $("[name='linear_meters']").val(linearMeters);
+    $("[name='decrease']").val(decrease);
+
+    //Cambiamos el texto y valor del botón btnAdd "Agregar", mostramos el botón cancelar, 
+    $('#btnAddPrint').text('Actualizar registro');
+    $('#btnCancel').removeClass('hidden');
+
+    //Deshabilitamos los botones de eliminar y editar para obligar al usuario a presionar el botón cancelar o actualizar
+    $('.action-button').prop("disabled", true);
+
+    switch(action) {
+            
+      //Se actualizará el registro diréctamente en la base de datos
+      case 'PUT':
+
+        //Cambiamos el valor del campo "_method" para indicar al formulario que haremos una petición PUT
+        $("#methodFormAdd").val('PUT');
+        //Recupremos el identificado del registro a editar y lo asignamos al formulario formAdd
+        var printLoadId = $(this).closest('tr').find("[name='print_load_id']").val();
+        $('#printLoadId').val(printLoadId);
+
+      break;
+            
+      //Se actualizará el registro a nivel vista
+      case 'UPDATE':
+
+        //Indicamos que el formulario está listo para actualizar registro actualizando su acción y el valor del índice de registro
+        $("#methodFormAdd").val('UPDATE');
+        $("[name='_index']").val(indexRow);
+
+      break;
+            
+      default:
+        alert("Acción inválida");
+
+    }
+        
+  });
+
+  //Función que cancela la edición de un registro
+  $(document).on('click', '#btnCancel', function(){
+        
+    //Llamamos la función que limpia deja en su estado predeterminado el formulario formAdd
+    resetFormAdd();
+
+  });
+
+  //Función que muestra el formulario formSave en caso de que existan registros asignados a la orden de fabricación
+  function showFormSave(){
+
+    //Validamos si existen registros en la tabla principal
+    var rows = $("#tablePrintLoad > tbody > tr").length
+        
+    if (rows != 0){
+      $('#formSavePrintLoad').removeClass('display-none');
+    }else{
+      $('#formSavePrintLoad').addClass('display-none');
+    }
+
+  }
+
+  //Función que deja en su estado predeterminado el formulario formAddPrintLoad
+  function resetFormAdd(){
+    
+    //Limpiamos los campos del formulario
+    $('#formAddPrintLoad')[0].reset();
+    //Cambiamos el texto al botón btnAddPrint y ocultamos el botón cancelar
+    $('#btnAddPrint').text('Agregar');
+    $('#btnCancel').addClass('hidden');
+    //Habilitamos los botones de eliminar y editar registro
+    $('.action-button').prop("disabled", false);
+    //Preparamos el formulario para agregar nuevos registros
+    $("#methodFormAdd").val('ADD');
+    $("[name='_index']").val('');
+
+  }
+
+});

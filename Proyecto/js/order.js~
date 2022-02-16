@@ -1,0 +1,127 @@
+$(document).ready(function() { 
+
+    //Datapicker init
+    $('.default-date-picker').datepicker();
+
+    //Search ticket associated with the order
+    $('#frmSearchOrder').on('submit',function(){
+
+        //Hide message and validate input search
+        $('#searchMessage').addClass('display-none');
+        var search = $.trim($("#search").val());
+        if (search.length > 0){
+          
+          //Execute ajax requests
+            var dataString = $("#frmSearchOrder").serialize();
+            
+            $.ajax({
+                type: "post",
+                url: "http://localhost:8888/agh/public/orders/tickets/search",
+                data: dataString,
+                beforeSend: function() {
+                    //insert code
+                }
+            }).done(function(response){
+                //Assign values
+                if (response != 0){
+                  $('#ticket_id').val(response.ticket_id);
+                  $('#cuip').val(response.cuip);
+                  $('#description').val(response.description);
+                  $('#customer').val(response.customer);
+                  $('#amount_measurement_unit').val(response.amount_measurement_unit);
+                  $('#base_price').val(response.base_price);
+                  $('#type_of_currency').val(response.type_of_currency);
+                  $('#amount').focus();
+                }else{
+                  $('#searchMessage').removeClass('display-none')
+                    .text('*No es posible relacionar el ticket ingresado ya que no existe o no se encuentra liberado.');
+                  $('#ticket_id').val('');
+                  $('#cuip').val('');
+                  $('#description').val('');
+                  $('#customer').val('');
+                  $('#amount_measurement_unit').val('');
+                  $('#base_price').val('');
+                  $('#search').val('');
+                }
+            }).fail(function(response){
+                $('#searchMessage').removeClass('display-none')
+                    .text('*Ocurrió un error al comunicarse con el servidor, intente de nuevo por favor.');
+            }).always(function() {
+                //insert code
+            });
+
+        }else{
+          $('#searchMessage').removeClass('display-none').text('*Favor de ingresar el número de ticket asociado al pedido.');
+        }
+
+      return false;
+    }); 
+  
+  //====== Validate order form ========
+  $('#frmOrder').on('submit',function(){
+
+    //init has-error class in the form
+    $('#frmOrder').find('.has-error').removeClass('has-error')
+          .find('.help-block').addClass('display-none');
+
+    //Get status order
+
+    //Stores the items that do not meet validations
+    var elements = [];
+            
+    if($.trim($("#cuip").val()).length < 1){
+      elements.push('#cuip');
+    }
+
+    if($.trim($("#amount").val()).length < 1){
+      elements.push('#amount');
+    }
+
+    if($.trim($("#purchase_order").val()).length < 1){
+      elements.push('#purchase_order');
+    }
+
+    if ( $("#delivery_date").val() == ''){
+      elements.push('#delivery_date');
+    }
+
+    //if not a new order validate order sap and purcase order
+    if( $.trim($("#status_id").val()) >= 1 ){
+
+      if($.trim($("#order_sap").val()).length < 1){
+        elements.push('#order_sap');
+      }
+
+      if($.trim($("#manufacturing_order_id").val()).length < 1){
+        elements.push('#manufacturing_order_id');
+      }
+
+    }
+
+    //Show the error message to the validated elements
+    if(elements.length){
+      //Add error class and remove display-none class to elements
+      for (var i = 0; i < elements.length; i++) {
+          
+        $(elements[i]).closest('.form-group')
+          .addClass('has-error')
+          .find('.help-block')
+          .removeClass('display-none');
+      }
+        
+      //set focus to first element
+      $(elements[0]).focus();
+                
+      return false;
+
+    }else{
+        
+      //validate success
+      $(":submit").text('Guardando...').prop('disabled', true);
+      return true;
+      
+    }
+
+  })
+
+});

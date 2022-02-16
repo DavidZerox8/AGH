@@ -1,0 +1,240 @@
+TABLE{
+border 0;
+width:100%;
+}
+
+TH{
+background-color:#90EE90;
+text-align:center;
+}
+
+TD{
+background-color: #FFEAE1;
+text-align:center;
+}
+
+main {
+  width: 80%;
+  margin: auto;
+}
+
+#modal {
+  background: rgba(0, 0, 0, 0.9);
+  color: #fff;
+  position: fixed;
+  top: -100vh;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  transition: all .5s;
+}
+#modal p {
+  width: 60%;
+  height: 40%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+  font-size: 1.5em;
+  text-align: center;
+}
+
+#mostrar-modal {
+  display: none;
+}
+#mostrar-modal + label {
+  background: transparent;
+  display: table;
+  margin: auto;
+  color: #fff;
+  line-height: 3;
+  padding: 0 1em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+#mostrar-modal + label:hover {
+ background-color:#FFABAB;
+}
+#mostrar-modal:checked ~ #modal {
+  top: 0;
+}
+#mostrar-modal:checked ~ #cerrar-modal + label {
+  display: block;
+}
+
+#cerrar-modal {
+  display: none;
+}
+#cerrar-modal + label {
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  z-index: 100;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  background: tomato;
+  width: 25px;
+  height: 25px;
+  line-height: 25px;
+  text-align: center;
+  border-radius: 50%;
+  display: none;
+  transition: all .5s;
+}
+#cerrar-modal:checked ~ #modal {
+  top: -100vh;
+}
+#cerrar-modal:checked + label {
+  display: none;
+}
+
+#modal2 {
+  background: rgba(0, 0, 0, 0.9);
+  color: #fff;
+  position: fixed;
+  top: -100vh;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  transition: all .5s;
+}
+#modal2 p {
+  width: 60%;
+  height: 40%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+  font-size: 1.5em;
+  text-align: center;
+}
+
+#mostrar-modal2 {
+  display: none;
+}
+#mostrar-modal2 + label {
+  background: transparent;
+  display: table;
+  margin: auto;
+  color: #fff;
+  line-height: 3;
+  padding: 0 1em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+#mostrar-modal2 + label:hover {
+ background-color:#FFABAB;	
+ 
+}
+#mostrar-modal2:checked ~ #modal2 {
+  top: 0;
+}
+#mostrar-modal2:checked ~ #cerrar-modal2 + label {
+  display: block;
+}
+
+#cerrar-modal2 {
+  display: none;
+}
+#cerrar-modal2 + label {
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  z-index: 100;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  background: tomato;
+  width: 25px;
+  height: 25px;
+  line-height: 25px;
+  text-align: center;
+  border-radius: 50%;
+  display: none;
+  transition: all .5s;
+}
+#cerrar-modal2:checked ~ #modal2 {
+  top: -100vh;
+}
+#cerrar-modal2:checked + label {
+  display: none;
+}
+
+#modal3 {
+  background: rgba(0, 0, 0, 0.9);
+  color: #fff;
+  position: fixed;
+  top: -100vh;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  transition: all .5s;
+}
+#modal3 p {
+  width: 60%;
+  height: 40%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+  font-size: 1.5em;
+  text-align: center;
+}
+
+#mostrar-modal3 {
+  display: none;
+}
+#mostrar-modal3 + label {
+  background: transparent;
+  display: table;
+  margin: auto;
+  color: #fff;
+  line-height: 3;
+  padding: 0 1em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+#mostrar-modal3+ label:hover {
+	 background-color:#FFABAB;
+ 
+}
+#mostrar-modal3:checked ~ #modal3 {
+  top: 0;
+}
+#mostrar-modal3:checked ~ #cerrar-modal3 + label {
+  display: block;
+}
+
+#cerrar-modal3 {
+  display: none;
+}
+#cerrar-modal3 + label {
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  z-index: 100;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  background: tomato;
+  width: 25px;
+  height: 25px;
+  line-height: 25px;
+  text-align: center;
+  border-radius: 50%;
+  display: none;
+  transition: all .5s;
+}
+#cerrar-modal3:checked ~ #modal {
+  top: -100vh;
+}
+#cerrar-modal3:checked + label {
+  display: none;
+}

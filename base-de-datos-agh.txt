@@ -1,0 +1,122 @@
+create database agh;
+use agh;
+
+
+create table empleado
+(no_empleado int not null,
+nombre_dept varchar(30) not null,
+apellidoP varchar(50) not null,
+apellidoM varchar(50),
+nombre varchar(50) not null,
+genero varchar (10),
+fechaNac date not null,
+gradoEstud varchar(50) not null,
+telefono varchar(30),
+direccion varchar(100) not null,
+primary key (no_empleado));
+
+
+
+create table maquina
+(no_maquina int not null,
+nombre varchar(50) not null,
+micraje int not null,
+tipo varchar(50) not null,
+primary key (no_maquina));
+
+
+create table etiqueta
+(no_etiqueta int not null,
+no_maquina int not null,
+nombre varchar(50) not null,
+marca varchar(50) not null,
+ancho varchar(10) not null,
+alto varchar(10) not null,
+acabado varchar(50)not null,
+presentacion varchar(30) not null,
+descripcion varchar(40),
+material varchar(40),
+tipo_trabajo varchar(30),
+cliente varchar(30) not null,
+primary key (no_etiqueta),
+foreign key (no_maquina) references maquina (no_maquina));
+
+
+create table cliente 
+(no_cliente int not null,
+empresa varchar(50) not null,
+razonSocial varchar(50) not null,
+rfc varchar(20) null,
+domicilio varchar(70) not null,
+telefono varchar(20),
+email varchar(50),
+status varchar(20) not null,
+primary key (no_cliente));
+
+
+create table proveedor
+(no_proveedor int  not null,
+organizacion varchar(50) not null,
+direccion varchar(70),
+telefono varchar(25),
+email varchar(50),
+PRIMARY KEY (no_proveedor));
+
+
+create table material
+(no_material int not null,
+cantidad varchar(30) not null,
+descripcion varchar(50),
+presentacion varchar(30) not null,
+unidadMedida varchar(30) not null,
+primary key (no_material));
+
+
+create table pedidoProveedor
+(no_pedido_proveedor int not null,
+no_proveedor int not null,
+no_material int not null,
+cantidad varchar(50) not null,
+fechaEntrega date not null,
+horaEntrega time not null,
+fechaSolicitud date not null,
+horaSolicitud time not null,
+primary key (no_pedido_proveedor),
+foreign key (no_proveedor) references proveedor (no_proveedor),
+foreign key (no_material) references material (no_material));
+
+
+create table pedidoCliente
+(no_pedido_cliente int not null,
+no_cliente int not null,
+no_etiqueta int not null,
+cantidad varchar(50) not null,
+fechaEntrega date not null,
+horaEntrega time not null,
+fechaSolicitud date,
+horaSolicitud time,
+primary key (no_pedido_cliente),
+foreign key (no_cliente) references cliente (no_cliente),
+foreign key (no_etiqueta) references etiqueta (no_etiqueta));
+
+
+
+
+create table transporte 
+(no_transporte int not null,
+no_empleado int not null,
+marca varchar(20) not null,
+modelo int not null,
+numSerie varchar(20) not null,
+placas varchar(10) not null,
+diasCircula varchar(30) not null,
+mesVerificacion varchar(30) not null,
+mesTenencia varchar(15) not null,
+PRIMARY KEY(no_transporte),
+foreign key (no_empleado) references empleado (no_empleado));
+
+
+create table usuarios
+(nombre_usuario varchar(15) not null,
+contrasenia varchar(10) not null);
+
